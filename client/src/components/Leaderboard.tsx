@@ -47,9 +47,10 @@ export function Leaderboard({ entries }: LeaderboardProps) {
               transition={{ delay: index * 0.05 }}
               className={`
                 flex items-center gap-3 p-3 rounded-lg
-                ${entry.isCurrentUser 
-                  ? 'bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border border-cyan-500/50' 
-                  : 'bg-gray-800/30 hover:bg-gray-800/50'
+                ${
+                  entry.isCurrentUser
+                    ? "bg-gradient-to-r from-cyan-900/40 to-blue-900/40 border border-cyan-500/50"
+                    : "bg-gray-800/30 hover:bg-gray-800/50"
                 }
                 transition-colors duration-200
               `}
@@ -72,7 +73,11 @@ export function Leaderboard({ entries }: LeaderboardProps) {
 
               {/* Address */}
               <div className="flex-1">
-                <div className={`text-sm ${entry.isCurrentUser ? 'text-cyan-300' : 'text-gray-300'}`}>
+                <div
+                  className={`text-sm ${
+                    entry.isCurrentUser ? "text-cyan-300" : "text-gray-300"
+                  }`}
+                >
                   {entry.address}
                   {entry.isCurrentUser && (
                     <span className="ml-2 text-xs text-cyan-400">(You)</span>
@@ -82,7 +87,9 @@ export function Leaderboard({ entries }: LeaderboardProps) {
 
               {/* Stats */}
               <div className="text-right">
-                <div className="text-amber-400 text-sm">{entry.treasures} 💎</div>
+                <div className="text-amber-400 text-sm">
+                  {entry.treasures} 💎
+                </div>
                 <div className="text-gray-500 text-xs">{entry.value} pts</div>
               </div>
             </motion.div>

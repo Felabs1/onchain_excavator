@@ -1,10 +1,10 @@
-use dojo_starter::models::{Direction, Position};
+// use dojo_starter::models::{, Position};
 
 // define the interface
 #[starknet::interface]
 pub trait IActions<T> {
     fn spawn(ref self: T);
-    fn move(ref self: T, direction: Direction);
+    fn mine(ref self: T, tile: u32, random_no: u32);
 }
 
 // dojo decorator
@@ -12,16 +12,16 @@ pub trait IActions<T> {
 pub mod actions {
     use dojo::event::EventStorage;
     use dojo::model::ModelStorage;
-    use dojo_starter::models::{Moves, Vec2};
+    use dojo_starter::models::{Player, PlayerRank, PlayerTrait, Tile, TileTrait};
     use starknet::{ContractAddress, get_caller_address};
-    use super::{Direction, IActions, Position, next_position};
+    use super::IActions;
 
     #[derive(Copy, Drop, Serde)]
     #[dojo::event]
-    pub struct Moved {
+    pub struct Mined {
         #[key]
         pub player: ContractAddress,
-        pub direction: Direction,
+        pub tile: Tile,
     }
 
     #[abi(embed_v0)]
@@ -30,66 +30,78 @@ pub mod actions {
             // Get the default world.
             let mut world = self.world_default();
 
-            // Get the address of the current caller, possibly the player's address.
-            let player = get_caller_address();
-            // Retrieve the player's current position from the world.
-            let position: Position = world.read_model(player);
-
-            // Update the world state with the new data.
-
-            // 1. Move the player's position 10 units in both the x and y direction.
-            let new_position = Position {
-                player, vec: Vec2 { x: position.vec.x + 10, y: position.vec.y + 10 },
+            let player: Player = Player {
+                playerAddress: get_caller_address(),
+                health: 100,
+                energy: 50,
+                digs: 0,
+                treasures: 0,
+                value: 0,
+                common: 0,
+                rare: 0,
+                epic: 0,
+                legendary: 0,
             };
 
-            // Write the new position to the world.
-            world.write_model(@new_position);
-
-            // 2. Set the player's remaining moves to 100.
-            let moves = Moves {
-                player, remaining: 100, last_direction: Option::None, can_move: true,
-            };
-
-            // Write the new moves to the world.
-            world.write_model(@moves);
+            world.write_model(@player);
         }
 
         // Implementation of the move function for the ContractState struct.
-        fn move(ref self: ContractState, direction: Direction) {
+        fn mine(ref self: ContractState, tile: u32, random_no: u32) {
             // Get the address of the current caller, possibly the player's address.
 
             let mut world = self.world_default();
 
-            let player = get_caller_address();
+            let player_address = get_caller_address();
 
-            // Retrieve the player's current position and moves data from the world.
-            let position: Position = world.read_model(player);
-            let mut moves: Moves = world.read_model(player);
-            // if player hasn't spawn, read returns model default values. This leads to sub overflow
-            // afterwards.
-            // Plus it's generally considered as a good pratice to fast-return on matching
-            // conditions.
-            if !moves.can_move {
+            let mut player: Player = world.read_model(player_address);
+
+            if !player.can_dig() {
                 return;
             }
 
-            // Deduct one from the player's remaining moves.
-            moves.remaining -= 1;
+            let mut tile: Tile = Tile {
+                id: tile,
+                playerAddress: get_caller_address(),
+                excavated: true,
+                treasure: '',
+                hasTrap: false,
+            };
 
-            // Update the last direction the player moved in.
-            moves.last_direction = Option::Some(direction);
+            tile.fill_in_tile(random_no);
 
-            // Calculate the player's next position based on the provided direction.
-            let next = next_position(position, moves.last_direction);
+            if tile.hasTrap == true {
+                player.health -= 25;
+            }
 
-            // Write the new position to the world.
-            world.write_model(@next);
+            if tile.treasure != 'null' {
+                player.treasures += 1;
+                if tile.treasure == 'legendary' {
+                    player.value += 500;
+                    player.legendary += 1;
+                } else if tile.treasure == 'rare' {
+                    player.value += 50;
+                    player.rare += 1;
+                } else if tile.treasure == 'epic' {
+                    player.value += 150;
+                    player.epic += 1;
+                } else if tile.treasure == 'common' {
+                    player.value += 10;
+                    player.common += 1;
+                }
+            }
 
-            // Write the new moves to the world.
-            world.write_model(@moves);
+            player.digs += 1;
 
-            // Emit an event to the world to notify about the player's move.
-            world.emit_event(@Moved { player, direction });
+            if player.health == 0 {
+                let mut player_rank: PlayerRank = world.read_model(player_address);
+                player_rank.playerValue += player.value;
+                player_rank.treasuresCollected += player.treasures;
+                world.write_model(@player_rank);
+            }
+
+            world.write_model(@player);
+            world.write_model(@tile);
         }
     }
 
@@ -103,16 +115,3 @@ pub mod actions {
     }
 }
 
-// Define function like this:
-fn next_position(mut position: Position, direction: Option<Direction>) -> Position {
-    match direction {
-        Option::None => { return position; },
-        Option::Some(d) => match d {
-            Direction::Left => { position.vec.x -= 1; },
-            Direction::Right => { position.vec.x += 1; },
-            Direction::Up => { position.vec.y -= 1; },
-            Direction::Down => { position.vec.y += 1; },
-        },
-    }
-    position
-}

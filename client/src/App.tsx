@@ -26,9 +26,9 @@ const TREASURE_VALUES = {
 
 // Treasure spawn rates (approximate)
 const TREASURE_SPAWN_RATES = {
-  common: 0.4,    // 40%
-  rare: 0.25,     // 25%
-  epic: 0.08,     // 8%
+  common: 0.4, // 40%
+  rare: 0.25, // 25%
+  epic: 0.08, // 8%
   legendary: 0.02, // 2%
   // 25% chance of no treasure
 };
@@ -37,12 +37,26 @@ const TRAP_SPAWN_RATE = 0.15; // 15% chance of trap
 
 function generateRandomTreasure(): TreasureRarity {
   const rand = Math.random();
-  
+
   if (rand < TREASURE_SPAWN_RATES.legendary) return "legendary";
-  if (rand < TREASURE_SPAWN_RATES.legendary + TREASURE_SPAWN_RATES.epic) return "epic";
-  if (rand < TREASURE_SPAWN_RATES.legendary + TREASURE_SPAWN_RATES.epic + TREASURE_SPAWN_RATES.rare) return "rare";
-  if (rand < TREASURE_SPAWN_RATES.legendary + TREASURE_SPAWN_RATES.epic + TREASURE_SPAWN_RATES.rare + TREASURE_SPAWN_RATES.common) return "common";
-  
+  if (rand < TREASURE_SPAWN_RATES.legendary + TREASURE_SPAWN_RATES.epic)
+    return "epic";
+  if (
+    rand <
+    TREASURE_SPAWN_RATES.legendary +
+      TREASURE_SPAWN_RATES.epic +
+      TREASURE_SPAWN_RATES.rare
+  )
+    return "rare";
+  if (
+    rand <
+    TREASURE_SPAWN_RATES.legendary +
+      TREASURE_SPAWN_RATES.epic +
+      TREASURE_SPAWN_RATES.rare +
+      TREASURE_SPAWN_RATES.common
+  )
+    return "common";
+
   return null;
 }
 
@@ -58,13 +72,45 @@ function initializeTiles(): Tile[] {
   });
 }
 
+console.log(initializeTiles());
+
 // Mock leaderboard data
 const mockLeaderboard = [
-  { rank: 1, address: "0x742d...a3f1", treasures: 89, value: 12450, isCurrentUser: false },
-  { rank: 2, address: "0x8f3e...d2c4", treasures: 76, value: 10830, isCurrentUser: false },
-  { rank: 3, address: "0x1a9b...f7e2", treasures: 68, value: 9240, isCurrentUser: true },
-  { rank: 4, address: "0xc4d7...b8a9", treasures: 54, value: 7680, isCurrentUser: false },
-  { rank: 5, address: "0x5e2f...c1d6", treasures: 47, value: 6290, isCurrentUser: false },
+  {
+    rank: 1,
+    address: "0x742d...a3f1",
+    treasures: 89,
+    value: 12450,
+    isCurrentUser: false,
+  },
+  {
+    rank: 2,
+    address: "0x8f3e...d2c4",
+    treasures: 76,
+    value: 10830,
+    isCurrentUser: false,
+  },
+  {
+    rank: 3,
+    address: "0x1a9b...f7e2",
+    treasures: 68,
+    value: 9240,
+    isCurrentUser: true,
+  },
+  {
+    rank: 4,
+    address: "0xc4d7...b8a9",
+    treasures: 54,
+    value: 7680,
+    isCurrentUser: false,
+  },
+  {
+    rank: 5,
+    address: "0x5e2f...c1d6",
+    treasures: 47,
+    value: 6290,
+    isCurrentUser: false,
+  },
 ];
 
 export default function App() {
@@ -98,6 +144,7 @@ export default function App() {
     }
 
     const tile = tiles[id];
+    console.log(tile);
     if (tile.excavated) return;
 
     // Update tile state
@@ -113,7 +160,7 @@ export default function App() {
     if (tile.hasTrap) {
       const newHealth = Math.max(0, health - TRAP_DAMAGE);
       setHealth(newHealth);
-      
+
       toast.error("💥 TRAP ACTIVATED!", {
         description: `You hit a trap! -${TRAP_DAMAGE} health`,
       });
@@ -187,16 +234,32 @@ export default function App() {
   }, [energy]);
 
   const treasureInventory = [
-    { rarity: "common" as const, count: treasureCounts.common, value: TREASURE_VALUES.common },
-    { rarity: "rare" as const, count: treasureCounts.rare, value: TREASURE_VALUES.rare },
-    { rarity: "epic" as const, count: treasureCounts.epic, value: TREASURE_VALUES.epic },
-    { rarity: "legendary" as const, count: treasureCounts.legendary, value: TREASURE_VALUES.legendary },
+    {
+      rarity: "common" as const,
+      count: treasureCounts.common,
+      value: TREASURE_VALUES.common,
+    },
+    {
+      rarity: "rare" as const,
+      count: treasureCounts.rare,
+      value: TREASURE_VALUES.rare,
+    },
+    {
+      rarity: "epic" as const,
+      count: treasureCounts.epic,
+      value: TREASURE_VALUES.epic,
+    },
+    {
+      rarity: "legendary" as const,
+      count: treasureCounts.legendary,
+      value: TREASURE_VALUES.legendary,
+    },
   ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-blue-950 to-black text-white p-6">
       <Toaster />
-      
+
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -30 }}
@@ -220,9 +283,9 @@ export default function App() {
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-3">
-            <WalletConnect 
+            <WalletConnect
               onConnect={handleWalletConnect}
               onDisconnect={handleWalletDisconnect}
             />
@@ -261,7 +324,7 @@ export default function App() {
             onExcavate={handleExcavate}
             canExcavate={energy >= ENERGY_PER_DIG && health > 0}
           />
-          
+
           {/* Instructions */}
           <motion.div
             initial={{ opacity: 0 }}
@@ -273,8 +336,8 @@ export default function App() {
               Click tiles to excavate and discover treasures. Each dig costs{" "}
               <span className="text-cyan-400">{ENERGY_PER_DIG} energy</span>.
               <br />
-              <span className="text-red-400">⚠️ Beware of traps!</span> They deal{" "}
-              <span className="text-red-400">{TRAP_DAMAGE} damage</span>.
+              <span className="text-red-400">⚠️ Beware of traps!</span> They
+              deal <span className="text-red-400">{TRAP_DAMAGE} damage</span>.
             </p>
           </motion.div>
         </div>

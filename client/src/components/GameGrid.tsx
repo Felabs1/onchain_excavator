@@ -44,20 +44,30 @@ export function GameGrid({ tiles, onExcavate, canExcavate }: GameGridProps) {
   return (
     <div className="grid grid-cols-8 gap-2 p-6 bg-gradient-to-b from-gray-900/50 to-black/50 rounded-xl border border-cyan-500/20 backdrop-blur-sm">
       {tiles.map((tile) => {
-        const TreasureIcon = tile.treasure ? treasureIcons[tile.treasure] : null;
+        const TreasureIcon = tile.treasure
+          ? treasureIcons[tile.treasure]
+          : null;
         const isTrap = tile.hasTrap && tile.excavated;
-        
+
         return (
           <motion.button
             key={tile.id}
-            onClick={() => !tile.excavated && canExcavate && onExcavate(tile.id)}
+            onClick={() =>
+              !tile.excavated && canExcavate && onExcavate(tile.id)
+            }
             onHoverStart={() => setHoveredTile(tile.id)}
             onHoverEnd={() => setHoveredTile(null)}
             disabled={tile.excavated || !canExcavate}
             className={`
               relative aspect-square rounded-lg overflow-hidden
-              ${tile.excavated ? 'cursor-default' : canExcavate ? 'cursor-pointer' : 'cursor-not-allowed'}
-              ${!tile.excavated && canExcavate ? 'hover:scale-105' : ''}
+              ${
+                tile.excavated
+                  ? "cursor-default"
+                  : canExcavate
+                  ? "cursor-pointer"
+                  : "cursor-not-allowed"
+              }
+              ${!tile.excavated && canExcavate ? "hover:scale-105" : ""}
               transition-transform duration-200
             `}
             whileTap={!tile.excavated && canExcavate ? { scale: 0.95 } : {}}
@@ -66,16 +76,28 @@ export function GameGrid({ tiles, onExcavate, canExcavate }: GameGridProps) {
               <div
                 className={`
                   w-full h-full bg-gradient-to-br from-gray-700 to-gray-800
-                  border-2 ${hoveredTile === tile.id && canExcavate ? 'border-cyan-400' : 'border-gray-600'}
+                  border-2 ${
+                    hoveredTile === tile.id && canExcavate
+                      ? "border-cyan-400"
+                      : "border-gray-600"
+                  }
                   flex items-center justify-center
                   transition-all duration-300
-                  ${hoveredTile === tile.id && canExcavate ? 'shadow-[0_0_15px_rgba(34,211,238,0.5)]' : ''}
+                  ${
+                    hoveredTile === tile.id && canExcavate
+                      ? "shadow-[0_0_15px_rgba(34,211,238,0.5)]"
+                      : ""
+                  }
                 `}
               >
                 <Pickaxe
                   className={`
                     w-5 h-5
-                    ${hoveredTile === tile.id && canExcavate ? 'text-cyan-400' : 'text-gray-500'}
+                    ${
+                      hoveredTile === tile.id && canExcavate
+                        ? "text-cyan-400"
+                        : "text-gray-500"
+                    }
                     transition-colors duration-300
                   `}
                 />
@@ -88,14 +110,14 @@ export function GameGrid({ tiles, onExcavate, canExcavate }: GameGridProps) {
                 className="w-full h-full flex items-center justify-center bg-gradient-to-br from-red-900 to-orange-900 border-2 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.7)]"
               >
                 <motion.div
-                  animate={{ 
+                  animate={{
                     scale: [1, 1.3, 1],
-                    rotate: [0, 10, -10, 0]
+                    rotate: [0, 10, -10, 0],
                   }}
-                  transition={{ 
+                  transition={{
                     duration: 0.5,
                     repeat: Infinity,
-                    repeatDelay: 1
+                    repeatDelay: 1,
                   }}
                 >
                   <Skull className="w-6 h-6 text-red-400 drop-shadow-lg" />
@@ -120,23 +142,28 @@ export function GameGrid({ tiles, onExcavate, canExcavate }: GameGridProps) {
                 transition={{ type: "spring", stiffness: 200, damping: 15 }}
                 className={`
                   w-full h-full flex items-center justify-center
-                  ${tile.treasure 
-                    ? `bg-gradient-to-br ${treasureColors[tile.treasure]} ${treasureGlow[tile.treasure]}`
-                    : 'bg-gradient-to-br from-gray-800 to-gray-900'
+                  ${
+                    tile.treasure
+                      ? `bg-gradient-to-br ${treasureColors[tile.treasure]} ${
+                          treasureGlow[tile.treasure]
+                        }`
+                      : "bg-gradient-to-br from-gray-800 to-gray-900"
                   }
-                  border-2 ${tile.treasure ? 'border-white/30' : 'border-gray-700'}
+                  border-2 ${
+                    tile.treasure ? "border-white/30" : "border-gray-700"
+                  }
                 `}
               >
                 {TreasureIcon ? (
                   <motion.div
-                    animate={{ 
+                    animate={{
                       scale: [1, 1.2, 1],
-                      rotate: [0, 5, -5, 0]
+                      rotate: [0, 5, -5, 0],
                     }}
-                    transition={{ 
+                    transition={{
                       duration: 2,
                       repeat: Infinity,
-                      ease: "easeInOut"
+                      ease: "easeInOut",
                     }}
                   >
                     <TreasureIcon className="w-6 h-6 text-white drop-shadow-lg" />

@@ -1,101 +1,82 @@
 use starknet::ContractAddress;
+const TRAP_SPAWN_RATE: u32 = 15;
+const TREASURE_SPAWN_RATE_LEGENDARY: u32 = 2;
+const TREASURE_SPAWN_RATE_RARE: u32 = 25;
+const TREASURE_SPAWN_RATE_EPIC: u32 = 25;
+const TREASURE_SPAWN_RATE_COMMON: u32 = 40;
 
 #[derive(Copy, Drop, Serde, Debug)]
 #[dojo::model]
-pub struct Moves {
+pub struct Tile {
     #[key]
-    pub player: ContractAddress,
-    pub remaining: u8,
-    pub last_direction: Option<Direction>,
-    pub can_move: bool,
+    pub id: u32,
+    #[key]
+    pub playerAddress: ContractAddress,
+    pub excavated: bool,
+    pub treasure: felt252,
+    pub hasTrap: bool,
 }
 
-#[derive(Drop, Serde, Debug)]
+
+#[derive(Copy, Drop, Serde, Debug)]
 #[dojo::model]
-pub struct DirectionsAvailable {
+pub struct Player {
     #[key]
-    pub player: ContractAddress,
-    pub directions: Array<Direction>,
+    pub playerAddress: ContractAddress,
+    pub health: u256,
+    pub energy: u256,
+    pub digs: u256,
+    pub treasures: u256,
+    pub value: u256,
+    pub common: u256,
+    pub rare: u256,
+    pub epic: u256,
+    pub legendary: u256,
 }
 
 #[derive(Copy, Drop, Serde, Debug)]
 #[dojo::model]
-pub struct Position {
+pub struct PlayerRank {
     #[key]
-    pub player: ContractAddress,
-    pub vec: Vec2,
-}
-
-#[derive(Copy, Drop, Serde, Debug)]
-#[dojo::model]
-pub struct PositionCount {
-    #[key]
-    pub identity: ContractAddress,
-    pub position: Span<(u8, u128)>,
-}
-
-#[derive(Serde, Copy, Drop, Introspect, PartialEq, Debug, DojoStore, Default)]
-pub enum Direction {
-    #[default]
-    Left,
-    Right,
-    Up,
-    Down,
-}
-
-#[derive(Copy, Drop, Serde, IntrospectPacked, Debug, DojoStore)]
-pub struct Vec2 {
-    pub x: u32,
-    pub y: u32,
+    pub playerAddress: ContractAddress,
+    pub playerValue: u256,
+    pub treasuresCollected: u256,
 }
 
 
-impl DirectionIntoFelt252 of Into<Direction, felt252> {
-    fn into(self: Direction) -> felt252 {
-        match self {
-            Direction::Left => 1,
-            Direction::Right => 2,
-            Direction::Up => 3,
-            Direction::Down => 4,
-        }
-    }
-}
-
-impl OptionDirectionIntoFelt252 of Into<Option<Direction>, felt252> {
-    fn into(self: Option<Direction>) -> felt252 {
-        match self {
-            Option::None => 0,
-            Option::Some(d) => d.into(),
+#[generate_trait]
+pub impl PlayerImpl of PlayerTrait {
+    fn can_dig(self: Player) -> bool {
+        if self.energy > 0 && self.health > 0 {
+            return true;
+        } else {
+            return false;
         }
     }
 }
 
 #[generate_trait]
-impl Vec2Impl of Vec2Trait {
-    fn is_zero(self: Vec2) -> bool {
-        if self.x - self.y == 0 {
-            return true;
-        }
-        false
-    }
+pub impl TileImpl of TileTrait {
+    fn fill_in_tile(ref self: Tile, random_no: u32) {
+        let has_trap: bool = random_no < TRAP_SPAWN_RATE;
+        let treasure: felt252 = if random_no < TREASURE_SPAWN_RATE_LEGENDARY {
+            'legendary'
+        } else if random_no < TREASURE_SPAWN_RATE_LEGENDARY + TREASURE_SPAWN_RATE_EPIC {
+            'epic'
+        } else if random_no < TREASURE_SPAWN_RATE_LEGENDARY
+            + TREASURE_SPAWN_RATE_EPIC
+            + TREASURE_SPAWN_RATE_RARE {
+            'rare'
+        } else if random_no < TREASURE_SPAWN_RATE_COMMON
+            + TREASURE_SPAWN_RATE_EPIC
+            + TREASURE_SPAWN_RATE_LEGENDARY
+            + TREASURE_SPAWN_RATE_RARE {
+            'common'
+        } else {
+            'null'
+        };
 
-    fn is_equal(self: Vec2, b: Vec2) -> bool {
-        self.x == b.x && self.y == b.y
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::{Vec2, Vec2Trait};
-
-    #[test]
-    fn test_vec_is_zero() {
-        assert(Vec2Trait::is_zero(Vec2 { x: 0, y: 0 }), 'not zero');
-    }
-
-    #[test]
-    fn test_vec_is_equal() {
-        let position = Vec2 { x: 420, y: 0 };
-        assert(position.is_equal(Vec2 { x: 420, y: 0 }), 'not equal');
+        self.treasure = treasure;
+        self.hasTrap = has_trap;
     }
 }
