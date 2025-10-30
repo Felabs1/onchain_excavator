@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Pickaxe, RotateCcw, Sparkles } from "lucide-react";
-import { GameGrid, Tile, TreasureRarity } from "./components/GameGrid";
-import { PlayerStats } from "./components/PlayerStats";
-import { Leaderboard } from "./components/Leaderboard";
-import { TreasureInventory } from "./components/TreasureInventory";
-import { WalletConnect } from "./components/WalletConnect";
-import { Button } from "./components/ui/button";
+import { GameGrid, Tile, TreasureRarity } from "../GameGrid";
+import { PlayerStats } from "../PlayerStats";
+import { Leaderboard } from "../Leaderboard";
+import { TreasureInventory } from "../TreasureInventory";
+import { WalletConnect } from "../WalletConnect";
+import { Button } from "../ui/button";
 import { toast } from "sonner@2.0.3";
-import { Toaster } from "./components/ui/sonner";
+import { Toaster } from "../ui/sonner";
 
 const GRID_SIZE = 64; // 8x8 grid
 const MAX_ENERGY = 50;

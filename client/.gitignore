@@ -7,10 +7,24 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependency directories
 node_modules
 dist
 dist-ssr
+dev-dist
+.pnpm-store
+
+# Environment and local settings
 *.local
+.env
+
+# mkcert certificates
+dev-key.pem
+dev.pem
+localhost*.pem
+localhost*-key.pem
+mkcert+1-key.pem
+mkcert+1.pem
 
 # Editor directories and files
 .vscode/*
