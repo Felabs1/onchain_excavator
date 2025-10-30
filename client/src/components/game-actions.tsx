@@ -4,7 +4,7 @@ import { Dumbbell, Hammer, Bed, Loader2, ExternalLink } from "lucide-react";
 import { useTrainAction } from "../dojo/hooks/useTrainAction";
 import { useMineAction } from "../dojo/hooks/useMineAction";
 import { useRestAction } from "../dojo/hooks/useRestAction";
-import useAppStore from "../zustand/store";
+import useAppStore from "../zustand/store1";
 
 export function GameActions() {
   const player = useAppStore((state) => state.player);
@@ -106,12 +106,13 @@ export function GameActions() {
               {/* Individual transaction state */}
               {(action.state.txStatus || hasError) && (
                 <div
-                  className={`p-3 rounded-lg border text-sm ${hasError
+                  className={`p-3 rounded-lg border text-sm ${
+                    hasError
                       ? "bg-red-500/10 border-red-500/30 text-red-400"
                       : action.state.txStatus === "SUCCESS"
-                        ? "bg-green-500/10 border-green-500/30 text-green-400"
-                        : "bg-yellow-500/10 border-yellow-500/30 text-yellow-400"
-                    }`}
+                      ? "bg-green-500/10 border-green-500/30 text-green-400"
+                      : "bg-yellow-500/10 border-yellow-500/30 text-yellow-400"
+                  }`}
                 >
                   {hasError ? (
                     `❌ Error: ${action.state.error}`
@@ -138,8 +139,8 @@ export function GameActions() {
                   ) : (
                     <div className="space-y-2">
                       <div className="flex items-center gap-2">
-                        <Loader2 className="w-3 h-3 animate-spin" />
-                        ⏳ {action.label} processing...
+                        <Loader2 className="w-3 h-3 animate-spin" />⏳{" "}
+                        {action.label} processing...
                       </div>
                       {action.state.txHash && (
                         <div className="flex items-center gap-2 text-xs">

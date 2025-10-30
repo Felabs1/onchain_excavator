@@ -9,6 +9,8 @@ import { WalletConnect } from "../WalletConnect";
 import { Button } from "../ui/button";
 import { toast } from "sonner@2.0.3";
 import { Toaster } from "../ui/sonner";
+import useAppStore from "../../zustand/store1";
+import { useMineAction } from "../../dojo/hooks/useMineAction";
 
 const GRID_SIZE = 64; // 8x8 grid
 const MAX_ENERGY = 50;
@@ -127,6 +129,8 @@ export default function App() {
     epic: 0,
     legendary: 0,
   });
+  const player = useAppStore((state) => state.player);
+  const { mineState, executeMine, canMine } = useMineAction();
 
   const handleExcavate = (id: number) => {
     if (health <= 0) {
@@ -144,7 +148,11 @@ export default function App() {
     }
 
     const tile = tiles[id];
-    console.log(tile);
+    console.log("this is where the function is supposed to run");
+    let randomNo = Number(Math.random().toFixed(2)) * 100;
+
+    executeMine(id, randomNo);
+
     if (tile.excavated) return;
 
     // Update tile state

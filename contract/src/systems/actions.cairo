@@ -102,6 +102,8 @@ pub mod actions {
 
             world.write_model(@player);
             world.write_model(@tile);
+
+            world.emit_event(@Mined { player: get_caller_address(), tile });
         }
     }
 

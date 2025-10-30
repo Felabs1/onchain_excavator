@@ -1,13 +1,13 @@
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
-import { Progress } from "./ui/progress"
-import { useAccount } from "@starknet-react/core"
-import useAppStore from "../zustand/store"
-import { Coins, Zap, Heart, Loader2, AlertTriangle } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
+import { Progress } from "./ui/progress";
+import { useAccount } from "@starknet-react/core";
+import useAppStore from "../zustand/store1";
+import { Coins, Zap, Heart, Loader2, AlertTriangle } from "lucide-react";
 
 export function PlayerStats() {
   const { status } = useAccount();
-  const player = useAppStore(state => state.player);
-  const isLoading = useAppStore(state => state.isLoading);
+  const player = useAppStore((state) => state.player);
+  const isLoading = useAppStore((state) => state.isLoading);
 
   const isConnected = status === "connected";
 
@@ -17,20 +17,20 @@ export function PlayerStats() {
       label: "Experience",
       value: player?.experience || 0,
       color: "text-blue-400",
-      icon: Zap
+      icon: Zap,
     },
     {
       label: "Health",
       value: player?.health || 100,
       color: getHealthColor(player?.health || 100),
       icon: Heart,
-      max: 100
+      max: 100,
     },
     {
       label: "Coins",
       value: player?.coins || 0,
       color: "text-yellow-400",
-      icon: Coins
+      icon: Coins,
     },
   ];
 
@@ -51,7 +51,9 @@ export function PlayerStats() {
     return (
       <Card className="bg-white/5 backdrop-blur-xl border-white/10">
         <CardHeader>
-          <CardTitle className="text-white text-xl font-bold">Player Stats</CardTitle>
+          <CardTitle className="text-white text-xl font-bold">
+            Player Stats
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center justify-center py-8">
@@ -62,13 +64,15 @@ export function PlayerStats() {
           </div>
         </CardContent>
       </Card>
-    )
+    );
   }
 
   return (
     <Card className="bg-white/5 backdrop-blur-xl border-white/10">
       <CardHeader>
-        <CardTitle className="text-white text-xl font-bold">Player Stats</CardTitle>
+        <CardTitle className="text-white text-xl font-bold">
+          Player Stats
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Main stats */}
@@ -113,16 +117,23 @@ export function PlayerStats() {
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <span className="text-slate-300">Health Status</span>
-              <span className={`font-bold text-sm ${getHealthColor(player.health)}`}>
-                {player.health >= 80 ? "Excellent" :
-                  player.health >= 50 ? "Good" :
-                    player.health >= 20 ? "Poor" : "Critical"}
+              <span
+                className={`font-bold text-sm ${getHealthColor(player.health)}`}
+              >
+                {player.health >= 80
+                  ? "Excellent"
+                  : player.health >= 50
+                  ? "Good"
+                  : player.health >= 20
+                  ? "Poor"
+                  : "Critical"}
               </span>
             </div>
             <Progress
               value={player.health}
-              className={`h-2 ${player.health >= 50 ? "bg-slate-700" : "bg-red-900/30"
-                }`}
+              className={`h-2 ${
+                player.health >= 50 ? "bg-slate-700" : "bg-red-900/30"
+              }`}
             />
           </div>
         )}
@@ -166,5 +177,5 @@ export function PlayerStats() {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

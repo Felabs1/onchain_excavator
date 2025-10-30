@@ -2,13 +2,13 @@ import { useState, useCallback } from "react";
 import { useAccount } from "@starknet-react/core";
 import { useDojoSDK } from "@dojoengine/sdk/react";
 import { Account } from "starknet";
-import useAppStore from "../../zustand/store";
+import useAppStore from "../../zustand/store1";
 
 interface TrainActionState {
   isLoading: boolean;
   error: string | null;
   txHash: string | null;
-  txStatus: 'PENDING' | 'SUCCESS' | 'REJECTED' | null;
+  txStatus: "PENDING" | "SUCCESS" | "REJECTED" | null;
 }
 
 interface UseTrainActionReturn {
@@ -27,7 +27,7 @@ export const useTrainAction = (): UseTrainActionReturn => {
     isLoading: false,
     error: null,
     txHash: null,
-    txStatus: null
+    txStatus: null,
   });
 
   const isConnected = status === "connected";
@@ -36,9 +36,11 @@ export const useTrainAction = (): UseTrainActionReturn => {
 
   const executeTrain = useCallback(async () => {
     if (!canTrain || !account) {
-      setTrainState(prev => ({
+      setTrainState((prev) => ({
         ...prev,
-        error: !account ? "Please connect your controller" : "Cannot train right now"
+        error: !account
+          ? "Please connect your controller"
+          : "Cannot train right now",
       }));
       return;
     }
@@ -48,7 +50,7 @@ export const useTrainAction = (): UseTrainActionReturn => {
         isLoading: true,
         error: null,
         txHash: null,
-        txStatus: 'PENDING'
+        txStatus: "PENDING",
       });
 
       console.log("📤 Executing train transaction...");
@@ -57,7 +59,7 @@ export const useTrainAction = (): UseTrainActionReturn => {
       console.log("📥 Train transaction response:", tx);
 
       if (tx?.transaction_hash) {
-        setTrainState(prev => ({ ...prev, txHash: tx.transaction_hash }));
+        setTrainState((prev) => ({ ...prev, txHash: tx.transaction_hash }));
       }
 
       if (tx && tx.code === "SUCCESS") {
@@ -66,10 +68,10 @@ export const useTrainAction = (): UseTrainActionReturn => {
         // Optimistic update: +10 experience
         updatePlayerExperience((player?.experience || 0) + 10);
 
-        setTrainState(prev => ({
+        setTrainState((prev) => ({
           ...prev,
-          txStatus: 'SUCCESS',
-          isLoading: false
+          txStatus: "SUCCESS",
+          isLoading: false,
         }));
 
         // Auto-clear after 3 seconds
@@ -78,22 +80,22 @@ export const useTrainAction = (): UseTrainActionReturn => {
             isLoading: false,
             error: null,
             txHash: null,
-            txStatus: null
+            txStatus: null,
           });
         }, 3000);
-
       } else {
-        throw new Error(`Train transaction failed with code: ${tx?.code || 'unknown'}`);
+        throw new Error(
+          `Train transaction failed with code: ${tx?.code || "unknown"}`
+        );
       }
-
     } catch (error) {
       console.error("❌ Error executing train:", error);
 
       setTrainState({
         isLoading: false,
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: error instanceof Error ? error.message : "Unknown error",
         txHash: null,
-        txStatus: 'REJECTED'
+        txStatus: "REJECTED",
       });
 
       // Auto-clear error after 5 seconds
@@ -102,7 +104,7 @@ export const useTrainAction = (): UseTrainActionReturn => {
           isLoading: false,
           error: null,
           txHash: null,
-          txStatus: null
+          txStatus: null,
         });
       }, 5000);
     }
@@ -113,7 +115,7 @@ export const useTrainAction = (): UseTrainActionReturn => {
       isLoading: false,
       error: null,
       txHash: null,
-      txStatus: null
+      txStatus: null,
     });
   }, []);
 
@@ -121,6 +123,6 @@ export const useTrainAction = (): UseTrainActionReturn => {
     trainState,
     executeTrain,
     canTrain,
-    resetTrainState
+    resetTrainState,
   };
 };

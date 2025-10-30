@@ -10,7 +10,7 @@ import { manifest } from "../config/manifest";
 //   } = import.meta.env;
 
 const VITE_PUBLIC_NODE_URL = "http://localhost:5050" as any;
-const VITE_PUBLIC_TORII = "http://localhost:8080" as any;
+const VITE_PUBLIC_TORII = "http://127.0.0.1:8080" as any;
 const VITE_PUBLIC_MASTER_ADDRESS = "";
 const VITE_PUBLIC_MASTER_PRIVATE_KEY = "";
 

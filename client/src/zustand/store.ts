@@ -1,82 +1,182 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
-// Interface matching your bindings
+// interface matching your bindings
+
 export interface Player {
-  owner: string;          
-  experience: number;
+  playerAddress: string;
   health: number;
-  coins: number;
-  creation_day: number;
+  energy: number;
+  digs: number;
+  treasures: number;
+  value: number;
+  common: number;
+  rare: number;
+  epic: number;
+  legendary: number;
 }
 
-// Application state
+export interface PlayerRank {
+  playerAddress: string;
+  playerValue: number;
+  treasuresCollected: number;
+}
+
+// Type definition for `dojo_starter::models::Tile` struct
+export interface Tile {
+  id: number;
+  playerAddress: string;
+  excavated: boolean;
+  treasure: number;
+  hasTrap: boolean;
+}
+
+// Type definition for `dojo_starter::systems::actions::actions::Mined` struct
+export interface Mined {
+  player: string;
+  tile: Tile;
+}
+
 interface AppState {
-  // Player data
+  // player data
   player: Player | null;
-  
-  // UI state
+  playerRank: PlayerRank | null;
+  tile: Tile | null;
+  mined: Mined | null;
+
+  // ui state
   isLoading: boolean;
   error: string | null;
-  
-  // Game state
+
+  // game state
   gameStarted: boolean;
 }
 
-// Store actions
 interface AppActions {
   // Player actions
   setPlayer: (player: Player | null) => void;
-  updatePlayerCoins: (coins: number) => void;
-  updatePlayerExperience: (experience: number) => void;
   updatePlayerHealth: (health: number) => void;
-  
+  updatePlayerEnergy: (energy: number) => void;
+  updatePlayerDigs: (digs: number) => void;
+  updatePlayerTreasures: (treasures: number) => void;
+  updatePlayerValue: (value: number) => void;
+  updatePlayerCommon: (common: number) => void;
+  updatePlayerRare: (rare: number) => void;
+  updatePlayerEpic: (epic: number) => void;
+  updatePlayerLegendary: (legendary: number) => void;
+
+  setPlayerRank: (playerRank: PlayerRank | null) => void;
+  updatePlayerRankValue: (playerValue: number) => void;
+  updateTreasuresCollected: (treasuresCollected: number) => void;
+
+  setTile: (tile: Tile | null) => void;
+  //   updateId: (id: number) => void;
+  updateExcavated: (excavated: boolean) => void;
+  updateTreasure: (treasure: number) => void;
+  updateHasTrap: (hasTrap: boolean) => void;
+
+  //   updatePlayerCoins: (coins: number) => void;
+  //   updatePlayerExperience: (experience: number) => void;
+  //   updatePlayerHealth: (health: number) => void;
+
   // UI actions
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
-  
+
   // Game actions
   startGame: () => void;
   endGame: () => void;
-  
-  // Utility actions
+
+  //   // Utility actions
   resetStore: () => void;
 }
 
-// Combine state and actions
 type AppStore = AppState & AppActions;
 
-// Initial state
 const initialState: AppState = {
   player: null,
+  playerRank: null,
+  mined: null,
+  tile: null,
   isLoading: false,
   error: null,
   gameStarted: false,
 };
 
-// Create the store
 const useAppStore = create<AppStore>()(
   persist(
     (set) => ({
-      // Initial state
       ...initialState,
-
-      // Player actions
+      // player actions
       setPlayer: (player) => set({ player }),
-      
-      updatePlayerCoins: (coins) => set((state) => ({
-        player: state.player ? { ...state.player, coins } : null
-      })),
-      
-      updatePlayerExperience: (experience) => set((state) => ({
-        player: state.player ? { ...state.player, experience } : null
-      })),
+      updatePlayerHealth: (health) =>
+        set((state) => ({
+          player: state.player ? { ...state.player, health } : null,
+        })),
+      updatePlayerEnergy: (energy) =>
+        set((state) => ({
+          player: state.player ? { ...state.player, energy } : null,
+        })),
+      updatePlayerDigs: (digs) =>
+        set((state) => ({
+          player: state.player ? { ...state.player, digs } : null,
+        })),
+      updatePlayerTreasures: (treasures) =>
+        set((state) => ({
+          player: state.player ? { ...state.player, treasures } : null,
+        })),
+      updatePlayerValue: (value) =>
+        set((state) => ({
+          player: state.player ? { ...state.player, value } : null,
+        })),
+      updatePlayerCommon: (common) =>
+        set((state) => ({
+          player: state.player ? { ...state.player, common } : null,
+        })),
+      updatePlayerRare: (rare) =>
+        set((state) => ({
+          player: state.player ? { ...state.player, rare } : null,
+        })),
+      updatePlayerEpic: (epic) =>
+        set((state) => ({
+          player: state.player ? { ...state.player, epic } : null,
+        })),
+      updatePlayerLegendary: (legendary) =>
+        set((state) => ({
+          player: state.player ? { ...state.player, legendary } : null,
+        })),
 
-      updatePlayerHealth: (health) => set((state) => ({
-        player: state.player ? { ...state.player, health } : null
-      })),
+      setPlayerRank: (playerRank) => set({ playerRank }),
 
-      // UI actions
+      updatePlayerRankValue: (playerValue) =>
+        set((state) => ({
+          playerRank: state.playerRank
+            ? { ...state.playerRank, playerValue }
+            : null,
+        })),
+      updateTreasuresCollected: (treasuresCollected) =>
+        set((state) => ({
+          playerRank: state.playerRank
+            ? { ...state.playerRank, treasuresCollected }
+            : null,
+        })),
+
+      setTile: (tile) => set({ tile }),
+      updateExcavated: (excavated) =>
+        set((state) => ({
+          tile: state.tile ? { ...state.tile, excavated } : null,
+        })),
+
+      updateTreasure: (treasure) =>
+        set((state) => ({
+          tile: state.tile ? { ...state.tile, treasure } : null,
+        })),
+
+      updateHasTrap: (hasTrap) =>
+        set((state) => ({
+          tile: state.tile ? { ...state.tile, hasTrap } : null,
+        })),
+
       setLoading: (isLoading) => set({ isLoading }),
       setError: (error) => set({ error }),
 
@@ -88,7 +188,7 @@ const useAppStore = create<AppStore>()(
       resetStore: () => set(initialState),
     }),
     {
-      name: 'dojo-starter-store',
+      name: "dojo-starter-store",
       partialize: (state) => ({
         player: state.player,
         gameStarted: state.gameStarted,

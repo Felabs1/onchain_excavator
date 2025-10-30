@@ -1,72 +1,100 @@
-import create from "zustand";
-import { persist } from "zustand/middleware";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 
-// interface matching your bindings
-
+// Interface matching your bindings
 export interface Player {
-  playerAddress: string;
+  owner: string;          
+  experience: number;
   health: number;
-  energy: number;
-  digs: number;
-  treasures: number;
-  value: number;
-  common: number;
-  rare: number;
-  epic: number;
-  legendary: number;
+  coins: number;
+  creation_day: number;
 }
 
-export interface PlayerRank {
-  playerAddress: string;
-  playerValue: number;
-  treasuresCollected: number;
-}
-
-// Type definition for `dojo_starter::models::Tile` struct
-export interface Tile {
-  id: number;
-  playerAddress: string;
-  excavated: boolean;
-  treasure: number;
-  hasTrap: boolean;
-}
-
-// Type definition for `dojo_starter::systems::actions::actions::Mined` struct
-export interface Mined {
-  player: string;
-  tile: Tile;
-}
-
+// Application state
 interface AppState {
-  // player data
+  // Player data
   player: Player | null;
-  playerRank: PlayerRank | null;
-  tile: Tile | null;
-  mined: Mined | null;
-
-  // ui state
+  
+  // UI state
   isLoading: boolean;
   error: string | null;
-
-  // game state
+  
+  // Game state
   gameStarted: boolean;
 }
 
+// Store actions
 interface AppActions {
   // Player actions
   setPlayer: (player: Player | null) => void;
-  //   updatePlayerCoins: (coins: number) => void;
-  //   updatePlayerExperience: (experience: number) => void;
-  //   updatePlayerHealth: (health: number) => void;
-
-  //   // UI actions
-  //   setLoading: (loading: boolean) => void;
-  //   setError: (error: string | null) => void;
-
-  //   // Game actions
-  //   startGame: () => void;
-  //   endGame: () => void;
-
-  //   // Utility actions
-  //   resetStore: () => void;
+  updatePlayerCoins: (coins: number) => void;
+  updatePlayerExperience: (experience: number) => void;
+  updatePlayerHealth: (health: number) => void;
+  
+  // UI actions
+  setLoading: (loading: boolean) => void;
+  setError: (error: string | null) => void;
+  
+  // Game actions
+  startGame: () => void;
+  endGame: () => void;
+  
+  // Utility actions
+  resetStore: () => void;
 }
+
+// Combine state and actions
+type AppStore = AppState & AppActions;
+
+// Initial state
+const initialState: AppState = {
+  player: null,
+  isLoading: false,
+  error: null,
+  gameStarted: false,
+};
+
+// Create the store
+const useAppStore = create<AppStore>()(
+  persist(
+    (set) => ({
+      // Initial state
+      ...initialState,
+
+      // Player actions
+      setPlayer: (player) => set({ player }),
+      
+      updatePlayerCoins: (coins) => set((state) => ({
+        player: state.player ? { ...state.player, coins } : null
+      })),
+      
+      updatePlayerExperience: (experience) => set((state) => ({
+        player: state.player ? { ...state.player, experience } : null
+      })),
+
+      updatePlayerHealth: (health) => set((state) => ({
+        player: state.player ? { ...state.player, health } : null
+      })),
+
+      // UI actions
+      setLoading: (isLoading) => set({ isLoading }),
+      setError: (error) => set({ error }),
+
+      // Game actions
+      startGame: () => set({ gameStarted: true }),
+      endGame: () => set({ gameStarted: false }),
+
+      // Utility actions
+      resetStore: () => set(initialState),
+    }),
+    {
+      name: 'dojo-starter-store',
+      partialize: (state) => ({
+        player: state.player,
+        gameStarted: state.gameStarted,
+      }),
+    }
+  )
+);
+
+export default useAppStore;
