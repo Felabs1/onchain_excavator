@@ -37,8 +37,8 @@ export function WalletConnect({ onConnect, onDisconnect }: WalletConnectProps) {
   const [isCopied, setIsCopied] = useState(false);
 
   // const { player, isLoading: playerLoading } = usePlayer();
-  // const { initializePlayer, isInitializing, txStatus, txHash } =
-  //   useSpawnPlayer();
+  const { initializePlayer, isInitializing, txStatus, txHash } =
+    useSpawnPlayer();
 
   const { connector } = useAccount();
   const isConnected = status === "connected";
@@ -49,6 +49,12 @@ export function WalletConnect({ onConnect, onDisconnect }: WalletConnectProps) {
       console.log(
         "🎮 Controller connected but no player found, auto-initializing..."
       );
+
+      setTimeout(() => {
+        initializePlayer().then((result) => {
+          console.log("🎮 Auto-initialization result:", result);
+        });
+      }, 500);
     }
   }, [isConnected]);
 

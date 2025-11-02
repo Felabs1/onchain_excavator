@@ -5,7 +5,7 @@ import { Account } from "starknet";
 import { useDojoSDK } from "@dojoengine/sdk/react";
 import { useStarknetConnect } from "./useStarknetConnect";
 import { usePlayer } from "./usePlayer";
-import useAppStore from "../../zustand/store1";
+import useAppStore from "../../zustand/store";
 
 // Types
 interface InitializeState {
@@ -76,6 +76,7 @@ export const useSpawnPlayer = () => {
 
       // Validation: Check that the account exists
       if (!account) {
+        console.log("account not found", account);
         const error = "No account found. Please connect your controller.";
         setInitState((prev) => ({ ...prev, error }));
         setIsInitializing(false);
@@ -152,7 +153,8 @@ export const useSpawnPlayer = () => {
 
           // Execute spawn transaction
           console.log("📤 Executing spawn transaction...");
-          const spawnTx = await client.game.spawnPlayer(account as Account);
+          // console.log("client actions", client.actions);
+          const spawnTx = await client.actions.spawn(account as Account);
 
           console.log("📥 Spawn transaction response:", spawnTx);
 
@@ -241,7 +243,7 @@ export const useSpawnPlayer = () => {
       refetchPlayer,
       player,
       isInitializing,
-      client.game,
+      client.actions,
       dojoState,
     ]);
 

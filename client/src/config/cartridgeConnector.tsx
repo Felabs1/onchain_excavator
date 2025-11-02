@@ -37,17 +37,21 @@ const getDefaultChainId = () => {
 };
 
 const getGameContractAddress = () => {
-  return manifest.contracts[0].address;
+  return "0x3a7e28319f3617da4135893c711c79a1306adcd87cca4fbd0ceda50ae397683";
 };
 
-const CONTRACT_ADDRESS_GAME = getGameContractAddress();
+const GAME_CONTRACT = manifest.contracts.find(
+  (contract) => contract.tag === "dojo_starter-actions"
+)?.address as any;
+
+const CONTRACT_ADDRESS_GAME = GAME_CONTRACT;
 console.log("Using game contract address:", CONTRACT_ADDRESS_GAME);
 
 const policies = {
   contracts: {
     [CONTRACT_ADDRESS_GAME]: {
       methods: [
-        { name: "spawn", entrypoint: "mine" },
+        { name: "spawn", entrypoint: "spawn" },
         { name: "mine", entrypoint: "mine" },
       ],
     },
@@ -61,6 +65,8 @@ const options: ControllerOptions = {
   namespace: "dojo_starter",
   slot: "dojo_starter",
 };
+
+console.log("policies ", policies);
 
 const cartridgeConnector = new ControllerConnector(
   options
