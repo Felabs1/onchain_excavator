@@ -58,8 +58,8 @@ const options: ControllerOptions = {
   chains: [{ rpcUrl: getRpcUrl() }],
   defaultChainId: getDefaultChainId(),
   policies,
-  namespace: "dojo_starter",
-  slot: "dojo_starter",
+  namespace: "exca",
+  slot: "exca",
 };
 
 const cartridgeConnector = new ControllerConnector(

@@ -1,9 +1,9 @@
 {
   "world": {
     "class_hash": "0x57994b6a75fad550ca18b41ee82e2110e158c59028c4478109a67965a0e5b1e",
-    "address": "0x3a7e28319f3617da4135893c711c79a1306adcd87cca4fbd0ceda50ae397683",
-    "seed": "exca",
-    "name": "Dojo starter",
+    "address": "0x1b770e1e62c5a3459fce9d13382e860d98e04bea4854255ad8f73fb1646de9a",
+    "seed": "exca_5",
+    "name": "Exca",
     "entrypoints": [
       "uuid",
       "set_metadata",
@@ -1479,8 +1479,8 @@
   },
   "contracts": [
     {
-      "address": "0x40a987cccf1482525932153a3426173d6dc016c4fa924808a40f6434a7056f2",
-      "class_hash": "0x2b1b52d1734bf20a88eac2773968eb660fb6f88ced119d6a1490ceb02f2923a",
+      "address": "0x42e788c1f26b39706fdf7be87e83d2071828bbf0fe5548331c4f2a656e81661",
+      "class_hash": "0x217592952838942a6d5544f68052150d725785db2ef027d26ebbe058c78e91b",
       "abi": [
         {
           "type": "impl",
@@ -1554,10 +1554,6 @@
               "inputs": [
                 {
                   "name": "tile",
-                  "type": "core::integer::u32"
-                },
-                {
-                  "name": "random_no",
                   "type": "core::integer::u32"
                 }
               ],
@@ -1683,7 +1679,7 @@
       ],
       "init_calldata": [],
       "tag": "exca-actions",
-      "selector": "0x7a1c71029f2d0b38e3ac89b09931d08b6e48417e079c289ff19a8698d0cba33",
+      "selector": "0xc6c5348abab4cf80da6a80a1194ac3c0e58073002dcc41e1e219a260933259",
       "systems": [
         "spawn",
         "mine",
@@ -1695,29 +1691,35 @@
   "models": [
     {
       "members": [],
-      "class_hash": "0x1de1318dd9a44998d700b300a053ea619641c55b65f25eb7dd48c14ef7d7699",
+      "class_hash": "0x5d5b9ca713ccd86a12913f49cd2d86c6c4f2b1971804d259d8b6ea6bee37b6f",
+      "tag": "exca-Mine",
+      "selector": "0xb697ec5a0b657f5bd177bc2dbb8e5e1a1b51d26cd448bbbb4f4a2162c030b7"
+    },
+    {
+      "members": [],
+      "class_hash": "0x2f6b9b361d36d1d7542d9a3f5bb0e2cc6ad2213450fbcc1f3fb2e8184d40581",
       "tag": "exca-Player",
-      "selector": "0x1cccb05d982525914bcdce99f0af51556dcb8d9f0e2317c0ad0221d13a809f9"
+      "selector": "0x3c75e772cff54e0918380de3d7eb213c4028280583b831f8dddc0eb0de4ca56"
     },
     {
       "members": [],
-      "class_hash": "0x1d3bbbaefcc023b9b2c3c5e3906f9427be2f8d79dba8bce4455dca7758c25f0",
+      "class_hash": "0x390c104158773460314daf9119d19876bcfb1c3bea2c7a0d127a2a2a5291628",
       "tag": "exca-PlayerRank",
-      "selector": "0x37bfd13bfd78e1f4c679089884c2de59fa7e2065abf9b93827adb781be2461a"
+      "selector": "0x353d9c7b1a4838c8385f5f8dc9d193a08504596bf259c72e4e42509a2210a8f"
     },
     {
       "members": [],
-      "class_hash": "0x511a9146ded753d3bcd40090d1cc5373531329a14699f5cc2b287adaa88c4ff",
+      "class_hash": "0x4c493d0893ec9ceacffb705fb872159f7adf4eca27e487bdb781b8d6a47304c",
       "tag": "exca-Tile",
-      "selector": "0x269db396285c14be3b7c7c5c69282444a6c8a97348b9346131c75076f4fbcf3"
+      "selector": "0x6f1230acce195002e27e26a43c560cd3333304e7108abd0872c33241ed3adbd"
     }
   ],
   "events": [
     {
       "members": [],
-      "class_hash": "0x5ed9195311ec0524b78feff6007d9b25795ff3a29e7a968e21669547b8fae09",
+      "class_hash": "0x6d0e7bf5c1bcf161a0299b80f5bd786ffa482f50069b96fbfe3a55ff327cdd6",
       "tag": "exca-Mined",
-      "selector": "0x5894493014d620c3f6111287f7e4e17c6bb4484d03dfade0061f0b1aa1887c8"
+      "selector": "0x7d780ebaa9b82e96748d0afc8a8b20a5d1fb1cb641b490c865c286b522fbaf8"
     }
   ],
   "external_contracts": []

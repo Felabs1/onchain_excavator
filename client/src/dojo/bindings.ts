@@ -2,7 +2,7 @@ import type { SchemaType as ISchemaType } from "@dojoengine/sdk";
 
 import { BigNumberish } from "starknet";
 
-// Type definition for `dojo_starter::models::Player` struct
+// Type definition for `exca::models::Player` struct
 export interface Player {
   playerAddress: string;
   health: number;
@@ -16,14 +16,14 @@ export interface Player {
   legendary: number;
 }
 
-// Type definition for `dojo_starter::models::PlayerRank` struct
+// Type definition for `exca::models::PlayerRank` struct
 export interface PlayerRank {
   playerAddress: string;
   playerValue: number;
   treasuresCollected: number;
 }
 
-// Type definition for `dojo_starter::models::Tile` struct
+// Type definition for `exca::models::Tile` struct
 export interface Tile {
   id: number;
   playerAddress: string;
@@ -32,14 +32,14 @@ export interface Tile {
   hasTrap: boolean;
 }
 
-// Type definition for `dojo_starter::systems::actions::actions::Mined` struct
+// Type definition for `exca::systems::actions::actions::Mined` struct
 export interface Mined {
   player: string;
   tile: Tile;
 }
 
 export interface SchemaType extends ISchemaType {
-  dojo_starter: {
+  exca: {
     Player: Player;
     PlayerRank: PlayerRank;
     Tile: Tile;
@@ -47,7 +47,7 @@ export interface SchemaType extends ISchemaType {
   };
 }
 export const schema: SchemaType = {
-  dojo_starter: {
+  exca: {
     Player: {
       playerAddress: "",
       health: 0,
@@ -85,8 +85,8 @@ export const schema: SchemaType = {
   },
 };
 export enum ModelsMapping {
-  Player = "dojo_starter-Player",
-  PlayerRank = "dojo_starter-PlayerRank",
-  Tile = "dojo_starter-Tile",
-  Mined = "dojo_starter-Mined",
+  Player = "exca-Player",
+  PlayerRank = "exca-PlayerRank",
+  Tile = "exca-Tile",
+  Mined = "exca-Mined",
 }

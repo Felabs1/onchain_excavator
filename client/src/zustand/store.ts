@@ -22,7 +22,7 @@ export interface PlayerRank {
   treasuresCollected: number;
 }
 
-// Type definition for `dojo_starter::models::Tile` struct
+// Type definition for `exca::models::Tile` struct
 export interface Tile {
   id: number;
   playerAddress: string;
@@ -31,7 +31,7 @@ export interface Tile {
   hasTrap: boolean;
 }
 
-// Type definition for `dojo_starter::systems::actions::actions::Mined` struct
+// Type definition for `exca::systems::actions::actions::Mined` struct
 export interface Mined {
   player: string;
   tile: Tile;

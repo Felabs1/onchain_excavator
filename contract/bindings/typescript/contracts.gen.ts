@@ -17,7 +17,7 @@ export function setupWorld(provider: DojoProvider) {
 			return await provider.execute(
 				snAccount,
 				build_actions_mine_calldata(tile, randomNo),
-				"dojo_starter",
+				"exca",
 			);
 		} catch (error) {
 			console.error(error);
@@ -38,7 +38,7 @@ export function setupWorld(provider: DojoProvider) {
 			return await provider.execute(
 				snAccount,
 				build_actions_spawn_calldata(),
-				"dojo_starter",
+				"exca",
 			);
 		} catch (error) {
 			console.error(error);

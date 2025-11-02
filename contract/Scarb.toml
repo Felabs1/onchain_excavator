@@ -1,6 +1,6 @@
 [package]
 cairo-version = "2.12.2"
-name = "dojo_starter"
+name = "exca"
 version = "1.7.0"
 edition = "2024_07"
 
@@ -9,8 +9,8 @@ sierra-replace-ids = true
 
 [scripts]
 migrate = "sozo build && sozo migrate"
-spawn = "sozo execute dojo_starter-actions spawn --wait"
-move = "sozo execute dojo_starter-actions move -c 1 --wait"
+spawn = "sozo execute exca-actions spawn --wait"
+move = "sozo execute exca-actions move -c 1 --wait"
 
 [dependencies]
 dojo = "1.7.0"
@@ -23,3 +23,5 @@ build-external-contracts = ["dojo::world::world_contract::world"]
 [dev-dependencies]
 cairo_test = "2.12.2"
 dojo_cairo_test = "1.7.0"
+
+[profile.sepolia]

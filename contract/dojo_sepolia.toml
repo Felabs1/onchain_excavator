@@ -1,0 +1,19 @@
+
+[namespace]
+default = "exca"
+
+[env]
+account_address = "0x04c4269d6bf1fe01deedd189b351477b240696b991f9c8652566e55a46e73135"
+private_key = "0x0423efeee540b72a1ad8c53c30202d8f2a238171e2e35fe0ae6270463999a146"
+rpc_url = "https://api.cartridge.gg/x/starknet/sepolia"
+
+[world]
+seed = "exca_5"
+name = "Exca"
+description = "Become a Miner"
+cover_uri = "file://assets/bg.webp"
+website = "https://exca.vercel.app/"
+
+
+[writers]
+"exca" = ["exca-actions"]
