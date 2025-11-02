@@ -3,6 +3,7 @@ import { useAccount } from "@starknet-react/core";
 import { useDojoSDK } from "@dojoengine/sdk/react";
 import { Account } from "starknet";
 import useAppStore from "../../zustand/store";
+import { CONTRACT_ADDRESS_GAME, VRF_PROVIDER_ADDRESS } from "../../constants";
 
 interface MineActionState {
   isLoading: boolean;
@@ -21,19 +22,7 @@ interface UseMineActionReturn {
 export const useMineAction = (): UseMineActionReturn => {
   const { account, status } = useAccount();
   const { client } = useDojoSDK();
-  const {
-    player,
-    updatePlayerHealth,
-    updatePlayerDigs,
-    updatePlayerCommon,
-    updatePlayerRare,
-    updatePlayerEpic,
-    updatePlayerLegendary,
-    tile,
-    updateExcavated,
-    updateHasTrap,
-    updateTreasure,
-  } = useAppStore();
+  const { player, updatePlayerHealth, updatePlayerDigs } = useAppStore();
 
   const [mineState, setMineState] = useState<MineActionState>({
     isLoading: false,
@@ -45,8 +34,7 @@ export const useMineAction = (): UseMineActionReturn => {
   const isConnected = status === "connected";
   const hasPlayer = player !== null;
   const hasEnoughHealth = (player?.health || 0) > 5;
-  const canMine =
-    isConnected && hasPlayer && hasEnoughHealth && !mineState.isLoading;
+  const canMine = isConnected && !mineState.isLoading;
 
   const executeMine = useCallback(
     async (tileId: number, randomNo: number) => {
@@ -70,25 +58,38 @@ export const useMineAction = (): UseMineActionReturn => {
         });
 
         console.log("📤 Executing mine transaction...");
+        console.log("client actions ", client.actions);
 
-        const tx = await client.actions.mine(
-          account as Account,
-          tileId,
-          randomNo
-        );
-        console.log("📥 Mine transaction response:", tx);
+          const tx1 = await account.execute([
+          {
+            contractAddress: VRF_PROVIDER_ADDRESS,
+            entrypoint: 'request_random',
+            calldata: [CONTRACT_ADDRESS_GAME, '0', account.address],
+          },
+          {
+            contractAddress: CONTRACT_ADDRESS_GAME,
+            entrypoint: 'mine',
+            calldata: [tileId],
+          },
+        ]);
 
-        if (tx?.transaction_hash) {
-          setMineState((prev) => ({ ...prev, txHash: tx.transaction_hash }));
+        // const tx = await client.actions.mine(
+        //   account as Account,
+        //   tileId
+        // );
+        console.log("📥 Mine transaction response:", tx1);
+
+        if (tx1) {
+          setMineState((prev) => ({ ...prev, txHash: tx1.transaction_hash }));
         }
 
-        if (tx && tx.code === "SUCCESS") {
+        if (tx1) {
           console.log("✅ Mine transaction successful!");
 
           // Optimistic update: +5 coins, -5 health
           // updatePlayerCoins((player?.coins || 0) + 5);
           // updatePlayerHealth(Math.max(0, (player?.health || 100) - 5));
-          updatePlayerDigs((player?.digs || 0) + 5);
+          updatePlayerDigs((player?.digs || 0) + 1);
 
           setMineState((prev) => ({
             ...prev,
@@ -131,7 +132,14 @@ export const useMineAction = (): UseMineActionReturn => {
         }, 5000);
       }
     },
-    [canMine, account, client.game, player, updatePlayerHealth, hasEnoughHealth]
+    [
+      canMine,
+      account,
+      client.actions,
+      player,
+      updatePlayerHealth,
+      hasEnoughHealth,
+    ]
   );
 
   const resetMineState = useCallback(() => {

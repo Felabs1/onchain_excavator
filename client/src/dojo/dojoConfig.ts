@@ -9,8 +9,8 @@ import { manifest } from "../config/manifest";
 //     VITE_PUBLIC_MASTER_PRIVATE_KEY,
 //   } = import.meta.env;
 
-const VITE_PUBLIC_NODE_URL = "http://localhost:5050" as any;
-const VITE_PUBLIC_TORII = "http://127.0.0.1:8080" as any;
+const VITE_PUBLIC_NODE_URL = "https://api.cartridge.gg/x/starknet/sepolia" as string;
+const VITE_PUBLIC_TORII = "https://api.cartridge.gg/x/exca-1/torii" as string;
 const VITE_PUBLIC_MASTER_ADDRESS = "";
 const VITE_PUBLIC_MASTER_PRIVATE_KEY = "";
 
@@ -19,5 +19,5 @@ export const dojoConfig = createDojoConfig({
   masterAddress: VITE_PUBLIC_MASTER_ADDRESS || "",
   masterPrivateKey: VITE_PUBLIC_MASTER_PRIVATE_KEY || "",
   rpcUrl: VITE_PUBLIC_NODE_URL || "",
-  toriiUrl: VITE_PUBLIC_TORII || "",
+  toriiUrl: VITE_PUBLIC_TORII || "https://api.cartridge.gg/x/exca-1/torii",
 });

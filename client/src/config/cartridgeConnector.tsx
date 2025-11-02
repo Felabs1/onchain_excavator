@@ -3,12 +3,13 @@ import { ControllerConnector } from "@cartridge/connector";
 import { ControllerOptions } from "@cartridge/controller";
 import { constants } from "starknet";
 import { manifest } from "./manifest";
+import { CONTRACT_ADDRESS_GAME, VRF_PROVIDER_ADDRESS } from "../constants";
 
 // const { VITE_PUBLIC_DEPLOY_TYPE } = import.meta.env;
 
 // console.log("VITE_PUBLIC_DEPLOY_TYPE", VITE_PUBLIC_DEPLOY_TYPE);
 
-const VITE_PUBLIC_DEPLOY_TYPE = "localhost" as any;
+const VITE_PUBLIC_DEPLOY_TYPE = "sepolia" as any;
 
 const getRpcUrl = () => {
   switch (VITE_PUBLIC_DEPLOY_TYPE) {
@@ -37,20 +38,24 @@ const getDefaultChainId = () => {
 };
 
 const getGameContractAddress = () => {
-  return manifest.contracts[0].address;
+  return "0x3a7e28319f3617da4135893c711c79a1306adcd87cca4fbd0ceda50ae397683";
 };
 
-const CONTRACT_ADDRESS_GAME = getGameContractAddress();
+
 console.log("Using game contract address:", CONTRACT_ADDRESS_GAME);
+
 
 const policies = {
   contracts: {
     [CONTRACT_ADDRESS_GAME]: {
       methods: [
-        { name: "spawn", entrypoint: "mine" },
+        { name: "spawn", entrypoint: "spawn" },
         { name: "mine", entrypoint: "mine" },
       ],
     },
+    [VRF_PROVIDER_ADDRESS]: {
+        methods: [{ entrypoint: 'request_random' }],
+      },
   },
 };
 
@@ -61,6 +66,8 @@ const options: ControllerOptions = {
   namespace: "exca",
   slot: "exca",
 };
+
+console.log("policies ", policies);
 
 const cartridgeConnector = new ControllerConnector(
   options

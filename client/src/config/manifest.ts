@@ -1,5 +1,5 @@
 import localhost from "../../../contract/manifest_dev.json"; // local development manifest
-import sepolia from "../../../contract/manifest_dev.json"; // sepolia manifest
+import sepolia from "../../../contract/manifest_sepolia.json"; // sepolia manifest
 import mainnet from "../../../contract/manifest_dev.json"; // change for the right mainnet manifest
 import slot from "../../../contract/manifest_dev.json"; // change for the right slot manifest
 
@@ -14,7 +14,7 @@ const manifests = {
   slot,
 };
 
-const VITE_PUBLIC_DEPLOY_TYPE = "localhost" as string;
+const VITE_PUBLIC_DEPLOY_TYPE = "sepolia" as string;
 // Get deployment type from environment with fallback
 // const deployType = import.meta.env.VITE_PUBLIC_DEPLOY_TYPE as string;
 const deployType = VITE_PUBLIC_DEPLOY_TYPE;

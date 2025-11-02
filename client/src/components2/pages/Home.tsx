@@ -151,7 +151,9 @@ export default function App() {
     console.log("this is where the function is supposed to run");
     let randomNo = Number(Math.random().toFixed(2)) * 100;
 
-    executeMine(id, randomNo);
+    /* function call */
+    console.log(id, Math.floor(randomNo));
+    executeMine(id, Math.floor(randomNo));
 
     if (tile.excavated) return;
 

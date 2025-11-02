@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { sepolia, mainnet } from "@starknet-react/chains";
+import { sepolia, mainnet, devnet } from "@starknet-react/chains";
 import {
   jsonRpcProvider,
   StarknetConfig,
@@ -9,7 +9,7 @@ import cartridgeConnector from "../config/cartridgeConnector";
 
 export default function StarknetProvider({ children }: PropsWithChildren) {
   // const { VITE_PUBLIC_DEPLOY_TYPE } = import.meta.env;
-  const VITE_PUBLIC_DEPLOY_TYPE = "localhost" as string;
+  const VITE_PUBLIC_DEPLOY_TYPE = "localhost" as any;
 
   // Get RPC URL based on environment
   const getRpcUrl = () => {
@@ -18,6 +18,8 @@ export default function StarknetProvider({ children }: PropsWithChildren) {
         return "https://api.cartridge.gg/x/starknet/mainnet";
       case "sepolia":
         return "https://api.cartridge.gg/x/starknet/sepolia";
+      case "localhost":
+        return "http://localhost:5050";
       default:
         return "https://api.cartridge.gg/x/starknet/sepolia";
     }
@@ -28,8 +30,18 @@ export default function StarknetProvider({ children }: PropsWithChildren) {
     rpc: () => ({ nodeUrl: getRpcUrl() }),
   });
 
+  const getChains = () => {
+    if (VITE_PUBLIC_DEPLOY_TYPE === "mainnet") {
+      return [mainnet];
+    } else if (VITE_PUBLIC_DEPLOY_TYPE === "sepolia") {
+      return [sepolia];
+    } else {
+      return [devnet];
+    }
+  };
   // Determine which chain to use
-  const chains = VITE_PUBLIC_DEPLOY_TYPE === "mainnet" ? [mainnet] : [sepolia];
+  const chains = getChains();
+  console.log("chains");
 
   return (
     <StarknetConfig

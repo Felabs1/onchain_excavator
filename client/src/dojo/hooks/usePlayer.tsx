@@ -2,8 +2,8 @@ import { useEffect, useState, useMemo } from "react";
 import { useAccount } from "@starknet-react/core";
 import { addAddressPadding } from "starknet";
 import { dojoConfig } from "../dojoConfig";
-import { Player } from "../../zustand/store1";
-import useAppStore from "../../zustand/store1";
+import { Player } from "../../zustand/store";
+import useAppStore from "../../zustand/store";
 
 interface UsePlayerReturn {
   player: Player | null;
@@ -16,14 +16,19 @@ interface UsePlayerReturn {
 const TORII_URL = dojoConfig.toriiUrl + "/graphql";
 const PLAYER_QUERY = `
     query GetPlayer($playerOwner: ContractAddress!) {
-        fullStarterReactPlayerModels(where: { owner: $playerOwner }) {
+        dojoStarterPlayerModels(where: { playerAddress: $playerOwner }) {
             edges {
                 node {
-                    owner
-                    experience
+                   common
+                    digs
+                    energy
+                    epic
                     health
-                    coins
-                    creation_day
+                    legendary
+                    playerAddress
+                    rare
+                    treasures
+                    value
                 }
             }
             totalCount
@@ -63,23 +68,33 @@ const fetchPlayerData = async (playerOwner: string): Promise<Player | null> => {
     const result = await response.json();
     console.log("📡 GraphQL response:", result);
 
-    if (!result.data?.fullStarterReactPlayerModels?.edges?.length) {
+    if (!result.data?.dojoStarterPlayerModels?.edges?.length) {
       console.log("❌ No player found in response");
       return null;
     }
 
     // Extract player data
-    const rawPlayerData =
-      result.data.fullStarterReactPlayerModels.edges[0].node;
+    const rawPlayerData = result.data.dojoStarterPlayerModels.edges[0].node;
     console.log("📄 Raw player data:", rawPlayerData);
 
     // Convert hex values to numbers - using your structure
     const playerData: Player = {
-      owner: rawPlayerData.owner,
-      experience: hexToNumber(rawPlayerData.experience),
+      // owner: rawPlayerData.owner,
+      // experience: hexToNumber(rawPlayerData.experience),
+      // health: hexToNumber(rawPlayerData.health),
+      // coins: hexToNumber(rawPlayerData.coins),
+      // creation_day: hexToNumber(rawPlayerData.creation_day),
+
+      common: hexToNumber(rawPlayerData.common),
+      digs: hexToNumber(rawPlayerData.digs),
+      energy: hexToNumber(rawPlayerData.energy),
+      epic: hexToNumber(rawPlayerData.epic),
       health: hexToNumber(rawPlayerData.health),
-      coins: hexToNumber(rawPlayerData.coins),
-      creation_day: hexToNumber(rawPlayerData.creation_day),
+      legendary: hexToNumber(rawPlayerData.legendary),
+      playerAddress: rawPlayerData.playerAddress,
+      rare: hexToNumber(rawPlayerData.rare),
+      treasures: rawPlayerData.treasures,
+      value: hexToNumber(rawPlayerData.value),
     };
 
     console.log("✅ Player data after conversion:", playerData);

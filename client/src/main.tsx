@@ -17,10 +17,11 @@ import "./index.css";
 async function main() {
   try {
     console.log("🚀 Initializing Dojo SDK...");
+    console.log("world address ", dojoConfig.manifest.world.address);
 
     const sdk = await init<SchemaType>({
       client: {
-        toriiUrl: dojoConfig.toriiUrl,
+        toriiUrl: dojoConfig.toriiUrl || "http://127.0.0.1:8080",
         worldAddress: dojoConfig.manifest.world.address,
       },
       domain: {
@@ -38,7 +39,11 @@ async function main() {
 
     createRoot(rootElement).render(
       <StrictMode>
-        <DojoSdkProvider sdk={sdk} dojoConfig={dojoConfig} clientFn={setupWorld}>
+        <DojoSdkProvider
+          sdk={sdk}
+          dojoConfig={dojoConfig}
+          clientFn={setupWorld}
+        >
           <StarknetProvider>
             <App />
           </StarknetProvider>
@@ -55,10 +60,14 @@ async function main() {
         <StrictMode>
           <div className="min-h-screen bg-red-900 flex items-center justify-center">
             <div className="text-white text-center p-8">
-              <h1 className="text-2xl font-bold mb-4">⚠️ Dojo Initialization Error</h1>
+              <h1 className="text-2xl font-bold mb-4">
+                ⚠️ Dojo Initialization Error
+              </h1>
               <p className="mb-4">Failed to connect to Dojo SDK</p>
               <details className="text-left">
-                <summary className="cursor-pointer mb-2">Error Details:</summary>
+                <summary className="cursor-pointer mb-2">
+                  Error Details:
+                </summary>
                 <pre className="text-xs bg-black p-4 rounded overflow-auto">
                   {error instanceof Error ? error.message : String(error)}
                 </pre>
