@@ -1,9 +1,9 @@
 {
   "world": {
     "class_hash": "0x57994b6a75fad550ca18b41ee82e2110e158c59028c4478109a67965a0e5b1e",
-    "address": "0x3a7e28319f3617da4135893c711c79a1306adcd87cca4fbd0ceda50ae397683",
-    "seed": "dojo_starter",
-    "name": "Dojo starter",
+    "address": "0x5715cfaf845b1e73e2355fcfde6d811ce410a8adc19c728aa85fc1feaafbfe",
+    "seed": "onchainexca",
+    "name": "Onchainexca",
     "entrypoints": [
       "uuid",
       "set_metadata",
@@ -1479,8 +1479,8 @@
   },
   "contracts": [
     {
-      "address": "0x3c493a90f051b8be98af76759bdf5a0da88a2049aaaecdd3bc3dabbd9761f72",
-      "class_hash": "0x148355cf635685306964103dc9b9255b0a10abac792d2f785d6ed6932914a7f",
+      "address": "0x3f47683cd48492ca2e5eb6157352047463a59daa05577ed66d114b441ecc24f",
+      "class_hash": "0x236ea9e191b66256ae77e308e6e5cef646a2b5a7ee4902d93de43e19f88dbed",
       "abi": [
         {
           "type": "impl",
@@ -1535,11 +1535,11 @@
         {
           "type": "impl",
           "name": "ActionsImpl",
-          "interface_name": "dojo_starter::systems::actions::IActions"
+          "interface_name": "onchainexca::systems::actions::IActions"
         },
         {
           "type": "interface",
-          "name": "dojo_starter::systems::actions::IActions",
+          "name": "onchainexca::systems::actions::IActions",
           "items": [
             {
               "type": "function",
@@ -1554,10 +1554,6 @@
               "inputs": [
                 {
                   "name": "tile",
-                  "type": "core::integer::u32"
-                },
-                {
-                  "name": "random_no",
                   "type": "core::integer::u32"
                 }
               ],
@@ -1665,7 +1661,7 @@
         },
         {
           "type": "event",
-          "name": "dojo_starter::systems::actions::actions::Event",
+          "name": "onchainexca::systems::actions::actions::Event",
           "kind": "enum",
           "variants": [
             {
@@ -1682,8 +1678,8 @@
         }
       ],
       "init_calldata": [],
-      "tag": "dojo_starter-actions",
-      "selector": "0x7a1c71029f2d0b38e3ac89b09931d08b6e48417e079c289ff19a8698d0cba33",
+      "tag": "onchainexca-actions",
+      "selector": "0x77b490da270e9725310f24804218975caa5ee244286cb1e12da8be1e7e78e48",
       "systems": [
         "spawn",
         "mine",
@@ -1695,29 +1691,35 @@
   "models": [
     {
       "members": [],
-      "class_hash": "0x1de1318dd9a44998d700b300a053ea619641c55b65f25eb7dd48c14ef7d7699",
-      "tag": "dojo_starter-Player",
-      "selector": "0x1cccb05d982525914bcdce99f0af51556dcb8d9f0e2317c0ad0221d13a809f9"
+      "class_hash": "0x1ad4f0d7802a0a4d5abda4b72111aac271accfea08a49feacd087ea842d6270",
+      "tag": "onchainexca-Mine",
+      "selector": "0xe4c8c66bc8896032a0105fbe64e7aa5131feb96e56915fccd69a6f6ec66c9e"
     },
     {
       "members": [],
-      "class_hash": "0x1d3bbbaefcc023b9b2c3c5e3906f9427be2f8d79dba8bce4455dca7758c25f0",
-      "tag": "dojo_starter-PlayerRank",
-      "selector": "0x37bfd13bfd78e1f4c679089884c2de59fa7e2065abf9b93827adb781be2461a"
+      "class_hash": "0x216c69202086ad90d9f96d2aa7a38b9e5cd3dd9ed3debfa52cddf602993ffb6",
+      "tag": "onchainexca-Player",
+      "selector": "0x2af2767b5440f5bcacacb6467c15f6859aa04e5c19d3a80738cfcc9f5981e98"
     },
     {
       "members": [],
-      "class_hash": "0x511a9146ded753d3bcd40090d1cc5373531329a14699f5cc2b287adaa88c4ff",
-      "tag": "dojo_starter-Tile",
-      "selector": "0x269db396285c14be3b7c7c5c69282444a6c8a97348b9346131c75076f4fbcf3"
+      "class_hash": "0x1181f28d0a9f9e1dc6974942032edb6e512507bbe1dbff238b19c146acb2e72",
+      "tag": "onchainexca-PlayerRank",
+      "selector": "0x4893b45520c88a9843bbff3944258a6e94d22b9a3f7aa5f163741a5916c498"
+    },
+    {
+      "members": [],
+      "class_hash": "0x66deade847efa9fc359d04207777277071faf4b17fec8bac8d161f7f58ae48c",
+      "tag": "onchainexca-Tile",
+      "selector": "0x2690a423a0ea6eba324ea1eea59e44d503e05ebe0c75918810e28732d268584"
     }
   ],
   "events": [
     {
       "members": [],
-      "class_hash": "0x5ed9195311ec0524b78feff6007d9b25795ff3a29e7a968e21669547b8fae09",
-      "tag": "dojo_starter-Mined",
-      "selector": "0x5894493014d620c3f6111287f7e4e17c6bb4484d03dfade0061f0b1aa1887c8"
+      "class_hash": "0x262580b6aad9c60f308b3b2732054d9a1fcad73675761c9b9de37ea864d0b2d",
+      "tag": "onchainexca-Mined",
+      "selector": "0x3bdf37f75a23ec509e31ce9c492fd4ff91e78f339bb58dcf7762aa06c35e8e1"
     }
   ],
   "external_contracts": []

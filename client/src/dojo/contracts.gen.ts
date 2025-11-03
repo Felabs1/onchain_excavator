@@ -6,30 +6,26 @@ import {
   CairoOption,
   CairoCustomEnum,
 } from "starknet";
-import * as models from "./bindings";
+// import * as models from "./models.gen";
 
 export function setupWorld(provider: DojoProvider) {
-  const build_actions_mine_calldata = (
-    tile: BigNumberish,
-    randomNo: BigNumberish
-  ): DojoCall => {
+  const build_actions_mine_calldata = (tile: BigNumberish): DojoCall => {
     return {
       contractName: "actions",
       entrypoint: "mine",
-      calldata: [tile, randomNo],
+      calldata: [tile],
     };
   };
 
   const actions_mine = async (
     snAccount: Account | AccountInterface,
-    tile: BigNumberish,
-    randomNo: BigNumberish
+    tile: BigNumberish
   ) => {
     try {
       return await provider.execute(
         snAccount,
-        build_actions_mine_calldata(tile, randomNo),
-        "dojo_starter"
+        build_actions_mine_calldata(tile),
+        "onchainexca"
       );
     } catch (error) {
       console.error(error);
@@ -50,7 +46,7 @@ export function setupWorld(provider: DojoProvider) {
       return await provider.execute(
         snAccount,
         build_actions_spawn_calldata(),
-        "dojo_starter"
+        "onchainexca"
       );
     } catch (error) {
       console.error(error);

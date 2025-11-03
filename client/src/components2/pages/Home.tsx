@@ -9,8 +9,11 @@ import { WalletConnect } from "../WalletConnect";
 import { Button } from "../ui/button";
 import { toast } from "sonner@2.0.3";
 import { Toaster } from "../ui/sonner";
-import useAppStore from "../../zustand/store1";
+import useAppStore from "../../zustand/store";
 import { useMineAction } from "../../dojo/hooks/useMineAction";
+import { useLeaderboard } from "../../dojo/hooks/useLeaderboard";
+import { useStarknetConnect } from "../../dojo/hooks/useStarknetConnect";
+import { PlayerRank } from "../../dojo/bindings";
 
 const GRID_SIZE = 64; // 8x8 grid
 const MAX_ENERGY = 50;
@@ -74,6 +77,25 @@ function initializeTiles(): Tile[] {
   });
 }
 
+function formatLeaderboard(data, currentUserAddress) {
+  // 1. Sort players by their value in descending order
+  if (!data) return [];
+  const sorted = [...data].sort((a, b) => b.playerValue - a.playerValue);
+
+  // 2. Map to leaderboard format
+  return sorted.map((player, index) => ({
+    rank: index + 1,
+    address: `${player.playerAddress.slice(
+      0,
+      6
+    )}...${player.playerAddress.slice(-4)}`, // shortens address
+    treasures: player.treasuresCollected,
+    value: player.playerValue,
+    isCurrentUser:
+      currentUserAddress?.toLowerCase() === player.playerAddress.toLowerCase(),
+  }));
+}
+
 console.log(initializeTiles());
 
 // Mock leaderboard data
@@ -131,6 +153,13 @@ export default function App() {
   });
   const player = useAppStore((state) => state.player);
   const { mineState, executeMine, canMine } = useMineAction();
+  const { address } = useStarknetConnect();
+  console.log("logged in account is ", address);
+
+  const { playerRank, isLoading, statePlayerRank, error } = useLeaderboard();
+  console.log("statePlayerRank ", statePlayerRank);
+  const fixed = address?.replace(/^0x0+/, "0x");
+  const mockLeaderboard = formatLeaderboard(statePlayerRank, fixed);
 
   const handleExcavate = (id: number) => {
     if (health <= 0) {

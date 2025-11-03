@@ -4,19 +4,19 @@ import * as models from "./models.gen";
 
 export function setupWorld(provider: DojoProvider) {
 
-	const build_actions_mine_calldata = (tile: BigNumberish, randomNo: BigNumberish): DojoCall => {
+	const build_actions_mine_calldata = (tile: BigNumberish): DojoCall => {
 		return {
 			contractName: "actions",
 			entrypoint: "mine",
-			calldata: [tile, randomNo],
+			calldata: [tile],
 		};
 	};
 
-	const actions_mine = async (snAccount: Account | AccountInterface, tile: BigNumberish, randomNo: BigNumberish) => {
+	const actions_mine = async (snAccount: Account | AccountInterface, tile: BigNumberish) => {
 		try {
 			return await provider.execute(
 				snAccount,
-				build_actions_mine_calldata(tile, randomNo),
+				build_actions_mine_calldata(tile),
 				"dojo_starter",
 			);
 		} catch (error) {

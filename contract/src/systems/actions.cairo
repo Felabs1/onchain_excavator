@@ -1,10 +1,24 @@
-// use dojo_starter::models::{, Position};
+// use exca::models::{, Position};
+use starknet::ContractAddress;
+
 
 // define the interface
 #[starknet::interface]
 pub trait IActions<T> {
     fn spawn(ref self: T);
-    fn mine(ref self: T, tile: u32, random_no: u32);
+    fn mine(ref self: T, tile: u32);
+}
+
+#[derive(Drop, Copy, Clone, Serde)]
+pub enum Source {
+    Nonce: ContractAddress,
+    Salt: felt252,
+}
+
+#[starknet::interface]
+trait IVrfProvider<T> {
+    fn request_random(self: @T, caller: ContractAddress, source: Source);
+    fn consume_random(ref self: T, source: Source) -> felt252;
 }
 
 // dojo decorator
@@ -12,9 +26,12 @@ pub trait IActions<T> {
 pub mod actions {
     use dojo::event::EventStorage;
     use dojo::model::ModelStorage;
-    use dojo_starter::models::{Player, PlayerRank, PlayerTrait, Tile, TileTrait};
-    use starknet::{ContractAddress, get_caller_address};
-    use super::IActions;
+    use onchainexca::models::{Mine, Player, PlayerRank, PlayerTrait, Tile, TileTrait};
+    use starknet::{ContractAddress, get_block_timestamp, get_caller_address};
+    use super::{IActions, IVrfProviderDispatcher, IVrfProviderDispatcherTrait, Source};
+
+    const VRF_PROVIDER_ADDRESS: felt252 =
+        0x051fea4450da9d6aee758bdeba88b2f665bcbf549d2c61421aa724e9ac0ced8f;
 
     #[derive(Copy, Drop, Serde)]
     #[dojo::event]
@@ -47,14 +64,25 @@ pub mod actions {
         }
 
         // Implementation of the move function for the ContractState struct.
-        fn mine(ref self: ContractState, tile: u32, random_no: u32) {
+        fn mine(ref self: ContractState, tile: u32) {
             // Get the address of the current caller, possibly the player's address.
 
             let mut world = self.world_default();
 
             let player_address = get_caller_address();
 
+            let timestamp = get_block_timestamp();
+
             let mut player: Player = world.read_model(player_address);
+
+            let vrf_provider = IVrfProviderDispatcher {
+                contract_address: VRF_PROVIDER_ADDRESS.try_into().unwrap(),
+            };
+            let random_value: u256 = vrf_provider
+                .consume_random(Source::Nonce(player_address))
+                .into();
+
+            let constrained_random = random_value % 101;
 
             if !player.can_dig() {
                 return;
@@ -68,7 +96,7 @@ pub mod actions {
                 hasTrap: false,
             };
 
-            tile.fill_in_tile(random_no);
+            tile.fill_in_tile(constrained_random);
 
             if tile.hasTrap == true {
                 player.health -= 25;
@@ -97,11 +125,30 @@ pub mod actions {
                 let mut player_rank: PlayerRank = world.read_model(player_address);
                 player_rank.playerValue += player.value;
                 player_rank.treasuresCollected += player.treasures;
+
+                player.treasures = 0;
+                player.value = 0;
+                player.health = 100;
+                player.energy = 50;
+                player.digs = 0;
+                player.common = 0;
+                player.rare = 0;
+                player.epic = 0;
+                player.legendary = 0;
+
+                world.write_model(@player);
                 world.write_model(@player_rank);
             }
 
             world.write_model(@player);
             world.write_model(@tile);
+
+            world
+                .write_model(
+                    @Mine {
+                        id: timestamp, player_address: player_address, rand_value: random_value,
+                    },
+                );
 
             world.emit_event(@Mined { player: get_caller_address(), tile });
         }
@@ -109,10 +156,10 @@ pub mod actions {
 
     #[generate_trait]
     impl InternalImpl of InternalTrait {
-        /// Use the default namespace "dojo_starter". This function is handy since the ByteArray
+        /// Use the default namespace "exca". This function is handy since the ByteArray
         /// can't be const.
         fn world_default(self: @ContractState) -> dojo::world::WorldStorage {
-            self.world(@"dojo_starter")
+            self.world(@"onchainexca")
         }
     }
 }

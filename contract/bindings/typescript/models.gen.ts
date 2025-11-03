@@ -2,7 +2,14 @@ import type { SchemaType as ISchemaType } from "@dojoengine/sdk";
 
 import { BigNumberish } from 'starknet';
 
-// Type definition for `dojo_starter::models::Player` struct
+// Type definition for `onchainexca::models::Mine` struct
+export interface Mine {
+	id: BigNumberish;
+	player_address: string;
+	rand_value: BigNumberish;
+}
+
+// Type definition for `onchainexca::models::Player` struct
 export interface Player {
 	playerAddress: string;
 	health: BigNumberish;
@@ -16,14 +23,14 @@ export interface Player {
 	legendary: BigNumberish;
 }
 
-// Type definition for `dojo_starter::models::PlayerRank` struct
+// Type definition for `onchainexca::models::PlayerRank` struct
 export interface PlayerRank {
 	playerAddress: string;
 	playerValue: BigNumberish;
 	treasuresCollected: BigNumberish;
 }
 
-// Type definition for `dojo_starter::models::Tile` struct
+// Type definition for `onchainexca::models::Tile` struct
 export interface Tile {
 	id: BigNumberish;
 	playerAddress: string;
@@ -32,14 +39,15 @@ export interface Tile {
 	hasTrap: boolean;
 }
 
-// Type definition for `dojo_starter::systems::actions::actions::Mined` struct
+// Type definition for `onchainexca::systems::actions::actions::Mined` struct
 export interface Mined {
 	player: string;
 	tile: Tile;
 }
 
 export interface SchemaType extends ISchemaType {
-	dojo_starter: {
+	onchainexca: {
+		Mine: Mine,
 		Player: Player,
 		PlayerRank: PlayerRank,
 		Tile: Tile,
@@ -47,7 +55,12 @@ export interface SchemaType extends ISchemaType {
 	},
 }
 export const schema: SchemaType = {
-	dojo_starter: {
+	onchainexca: {
+		Mine: {
+			id: 0,
+			player_address: "",
+		rand_value: 0,
+		},
 		Player: {
 			playerAddress: "",
 		health: 0,
@@ -79,8 +92,9 @@ export const schema: SchemaType = {
 	},
 };
 export enum ModelsMapping {
-	Player = 'dojo_starter-Player',
-	PlayerRank = 'dojo_starter-PlayerRank',
-	Tile = 'dojo_starter-Tile',
-	Mined = 'dojo_starter-Mined',
+	Mine = 'onchainexca-Mine',
+	Player = 'onchainexca-Player',
+	PlayerRank = 'onchainexca-PlayerRank',
+	Tile = 'onchainexca-Tile',
+	Mined = 'onchainexca-Mined',
 }

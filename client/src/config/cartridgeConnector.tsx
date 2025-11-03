@@ -3,12 +3,13 @@ import { ControllerConnector } from "@cartridge/connector";
 import { ControllerOptions } from "@cartridge/controller";
 import { constants } from "starknet";
 import { manifest } from "./manifest";
+import { CONTRACT_ADDRESS_GAME, VRF_PROVIDER_ADDRESS } from "./constants";
 
 // const { VITE_PUBLIC_DEPLOY_TYPE } = import.meta.env;
 
 // console.log("VITE_PUBLIC_DEPLOY_TYPE", VITE_PUBLIC_DEPLOY_TYPE);
 
-const VITE_PUBLIC_DEPLOY_TYPE = "localhost" as any;
+const VITE_PUBLIC_DEPLOY_TYPE = "sepolia" as any;
 
 const getRpcUrl = () => {
   switch (VITE_PUBLIC_DEPLOY_TYPE) {
@@ -40,11 +41,6 @@ const getGameContractAddress = () => {
   return "0x3a7e28319f3617da4135893c711c79a1306adcd87cca4fbd0ceda50ae397683";
 };
 
-const GAME_CONTRACT = manifest.contracts.find(
-  (contract) => contract.tag === "dojo_starter-actions"
-)?.address as any;
-
-const CONTRACT_ADDRESS_GAME = GAME_CONTRACT;
 console.log("Using game contract address:", CONTRACT_ADDRESS_GAME);
 
 const policies = {
@@ -55,6 +51,9 @@ const policies = {
         { name: "mine", entrypoint: "mine" },
       ],
     },
+    [VRF_PROVIDER_ADDRESS]: {
+      methods: [{ entrypoint: "request_random" }],
+    },
   },
 };
 
@@ -62,8 +61,8 @@ const options: ControllerOptions = {
   chains: [{ rpcUrl: getRpcUrl() }],
   defaultChainId: getDefaultChainId(),
   policies,
-  namespace: "dojo_starter",
-  slot: "dojo_starter",
+  namespace: "excavator",
+  slot: "excavator",
 };
 
 console.log("policies ", policies);

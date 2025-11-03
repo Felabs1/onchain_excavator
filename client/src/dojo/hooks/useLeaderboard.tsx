@@ -2,33 +2,27 @@ import { useEffect, useState, useMemo } from "react";
 import { useAccount } from "@starknet-react/core";
 import { addAddressPadding } from "starknet";
 import { dojoConfig } from "../dojoConfig";
-import { Player } from "../../zustand/store";
+import { PlayerRank } from "../../zustand/store";
 import useAppStore from "../../zustand/store";
 
-interface UsePlayerReturn {
-  player: Player | null;
+interface UsePlayerRankReturn {
+  playerRank: PlayerRank[] | null;
+  statePlayerRank: PlayerRank[] | null;
   isLoading: boolean;
   error: Error | null;
   refetch: () => Promise<void>;
 }
 
-// Constants
 const TORII_URL = dojoConfig.toriiUrl + "/graphql";
+
 const PLAYER_QUERY = `
-    query GetPlayer($playerOwner: ContractAddress!) {
-        onchainexcaPlayerModels(where: { playerAddress: $playerOwner }) {
+    query GetPlayer {
+        onchainexcaPlayerRankModels {
             edges {
                 node {
-                   common
-                    digs
-                    energy
-                    epic
-                    health
-                    legendary
-                    playerAddress
-                    rare
-                    treasures
-                    value
+                   playerAddress
+                    playerValue
+                    treasuresCollected  
                 }
             }
             totalCount
@@ -36,7 +30,6 @@ const PLAYER_QUERY = `
     }
 `;
 
-// Helper to convert hex values to numbers
 const hexToNumber = (hexValue: string | number): number => {
   if (typeof hexValue === "number") return hexValue;
 
@@ -51,68 +44,55 @@ const hexToNumber = (hexValue: string | number): number => {
   return 0;
 };
 
-// Function to fetch player data from GraphQL
-const fetchPlayerData = async (playerOwner: string): Promise<Player | null> => {
+const fetchPlayerRankData = async (): Promise<PlayerRank[] | null> => {
   try {
-    console.log("🔍 Fetching player with owner:", playerOwner);
+    console.log("🔍 ranking players:");
 
     const response = await fetch(TORII_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         query: PLAYER_QUERY,
-        variables: { playerOwner },
       }),
     });
 
     const result = await response.json();
     console.log("📡 GraphQL response:", result);
 
-    if (!result.data?.onchainexcaPlayerModels?.edges?.length) {
+    if (!result.data?.onchainexcaPlayerRankModels?.edges?.length) {
       console.log("❌ No player found in response");
       return null;
     }
 
     // Extract player data
-    const rawPlayerData = result.data.onchainexcaPlayerModels.edges[0].node;
-    console.log("📄 Raw player data:", rawPlayerData);
+    const edges = result.data.onchainexcaPlayerRankModels.edges;
+    console.log("📄 Raw player data:", edges);
 
-    // Convert hex values to numbers - using your structure
-    const playerData: Player = {
-      // owner: rawPlayerData.owner,
-      // experience: hexToNumber(rawPlayerData.experience),
-      // health: hexToNumber(rawPlayerData.health),
-      // coins: hexToNumber(rawPlayerData.coins),
-      // creation_day: hexToNumber(rawPlayerData.creation_day),
+    const rawPlayerData: PlayerRank[] = edges.map((edge: any) => {
+      const node = edge.node;
+      return {
+        playerAddress: node.playerAddress,
+        playerValue: hexToNumber(node.playerValue),
+        treasuresCollected: hexToNumber(node.treasuresCollected),
+      };
+    });
 
-      common: hexToNumber(rawPlayerData.common),
-      digs: hexToNumber(rawPlayerData.digs),
-      energy: hexToNumber(rawPlayerData.energy),
-      epic: hexToNumber(rawPlayerData.epic),
-      health: hexToNumber(rawPlayerData.health),
-      legendary: hexToNumber(rawPlayerData.legendary),
-      playerAddress: rawPlayerData.playerAddress,
-      rare: hexToNumber(rawPlayerData.rare),
-      treasures: rawPlayerData.treasures,
-      value: hexToNumber(rawPlayerData.value),
-    };
-
-    console.log("✅ Player data after conversion:", playerData);
-    return playerData;
+    console.log("✅ Player data after conversion:", rawPlayerData);
+    return rawPlayerData;
   } catch (error) {
     console.error("❌ Error fetching player:", error);
     throw error;
   }
 };
 
-// Main hook
-export const usePlayer = (): UsePlayerReturn => {
+export const useLeaderboard = (): UsePlayerRankReturn => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
   const { account } = useAccount();
+  const [statePlayers, setStatePlayers] = useState([]);
 
-  const storePlayer = useAppStore((state) => state.player);
-  const setPlayer = useAppStore((state) => state.setPlayer);
+  const storePlayer = useAppStore((state) => state.playerRank);
+  const setPlayer = useAppStore((state) => state.setPlayerRank);
 
   const userAddress = useMemo(
     () => (account ? addAddressPadding(account.address).toLowerCase() : ""),
@@ -129,13 +109,14 @@ export const usePlayer = (): UsePlayerReturn => {
       setIsLoading(true);
       setError(null);
 
-      const playerData = await fetchPlayerData(userAddress);
+      const playerData = await fetchPlayerRankData();
       console.log("🎮 Player data fetched:", playerData);
 
-      setPlayer(playerData);
+      //   setPlayer(playerData);
+      setStatePlayers(playerData);
 
-      const updatedPlayer = useAppStore.getState().player;
-      console.log("💾 Player in store after update:", updatedPlayer);
+      const updatedPlayer = useAppStore.getState().playerRank;
+      console.log("💾 Players in store after update:", updatedPlayer);
     } catch (err) {
       const error =
         err instanceof Error ? err : new Error("Unknown error occurred");
@@ -164,7 +145,8 @@ export const usePlayer = (): UsePlayerReturn => {
   }, [account, setPlayer]);
 
   return {
-    player: storePlayer,
+    playerRank: storePlayer,
+    statePlayerRank: statePlayers,
     isLoading,
     error,
     refetch,

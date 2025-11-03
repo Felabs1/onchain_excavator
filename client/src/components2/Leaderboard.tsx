@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { Trophy, Medal, Award, User } from "lucide-react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+import { useLeaderboard } from "../dojo/hooks/useLeaderboard";
 
 interface LeaderboardEntry {
   rank: number;

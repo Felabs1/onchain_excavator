@@ -1,9 +1,9 @@
 use starknet::ContractAddress;
-const TRAP_SPAWN_RATE: u32 = 15;
-const TREASURE_SPAWN_RATE_LEGENDARY: u32 = 2;
-const TREASURE_SPAWN_RATE_RARE: u32 = 25;
-const TREASURE_SPAWN_RATE_EPIC: u32 = 25;
-const TREASURE_SPAWN_RATE_COMMON: u32 = 40;
+const TRAP_SPAWN_RATE: u256 = 15;
+const TREASURE_SPAWN_RATE_LEGENDARY: u256 = 2;
+const TREASURE_SPAWN_RATE_RARE: u256 = 25;
+const TREASURE_SPAWN_RATE_EPIC: u256 = 25;
+const TREASURE_SPAWN_RATE_COMMON: u256 = 40;
 
 #[derive(Copy, Drop, Serde, Debug)]
 #[dojo::model]
@@ -15,6 +15,16 @@ pub struct Tile {
     pub excavated: bool,
     pub treasure: felt252,
     pub hasTrap: bool,
+}
+
+#[derive(Copy, Drop, Serde, Debug)]
+#[dojo::model]
+pub struct Mine {
+    #[key]
+    pub id: u64,
+    #[key]
+    pub player_address: ContractAddress,
+    pub rand_value: u256,
 }
 
 
@@ -57,7 +67,7 @@ pub impl PlayerImpl of PlayerTrait {
 
 #[generate_trait]
 pub impl TileImpl of TileTrait {
-    fn fill_in_tile(ref self: Tile, random_no: u32) {
+    fn fill_in_tile(ref self: Tile, random_no: u256) {
         let has_trap: bool = random_no < TRAP_SPAWN_RATE;
         let treasure: felt252 = if random_no < TREASURE_SPAWN_RATE_LEGENDARY {
             'legendary'

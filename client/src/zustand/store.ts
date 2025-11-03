@@ -40,7 +40,7 @@ export interface Mined {
 interface AppState {
   // player data
   player: Player | null;
-  playerRank: PlayerRank | null;
+  playerRank: PlayerRank[] | null;
   tile: Tile | null;
   mined: Mined | null;
 
@@ -65,7 +65,7 @@ interface AppActions {
   updatePlayerEpic: (epic: number) => void;
   updatePlayerLegendary: (legendary: number) => void;
 
-  setPlayerRank: (playerRank: PlayerRank | null) => void;
+  setPlayerRank: (playerRank: PlayerRank[] | null) => void;
   updatePlayerRankValue: (playerValue: number) => void;
   updateTreasuresCollected: (treasuresCollected: number) => void;
 

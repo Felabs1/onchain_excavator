@@ -23,7 +23,7 @@ version = "1.7.0-alpha.4"
 source = "git+https://github.com/dojoengine/dojo?tag=v1.7.0-alpha.4#7b78108ce7aea7753c0a9e34cb83465a76bbf2e4"
 
 [[package]]
-name = "dojo_starter"
+name = "onchainexca"
 version = "1.7.0-alpha.4"
 dependencies = [
  "dojo",
