@@ -1,8 +1,7 @@
 # 🪓 Onchain Excavator
 
-[Gameplay video]
+[Gameplay video](https://youtu.be/YjAQEEROIcc)
 
-(https://youtu.be/YjAQEEROIcc)
 Dig. Discover. Dominate the Chain.
 
 
