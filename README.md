@@ -2,6 +2,10 @@
 
 [Gameplay video](https://youtu.be/YjAQEEROIcc)
 
+<video width="320" height="240" controls>
+  <source src="https://youtu.be/YjAQEEROIcc" type="video/mp4">
+</video>
+
 Dig. Discover. Dominate the Chain.
 
 
